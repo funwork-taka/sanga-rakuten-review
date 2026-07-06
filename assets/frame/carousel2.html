@@ -75,14 +75,21 @@
         var el = slides[idx];
         var elCenter = el.offsetLeft + el.offsetWidth / 2;   // レイアウト位置（scale無視）で中央合わせ
         var tx = track.parentElement.clientWidth / 2 - elCenter;
-        if (!animate) { track.style.transition = 'none'; }
+        var k;
+        if (!animate) {
+          // 無音ジャンプ：トラックだけでなく各スライドの scale transition も無効化する。
+          // (これを切らないと is-center を付け替えた新中央スライドが 1→1.45 を再アニメ＝二重ズームになる)
+          track.style.transition = 'none';
+          for (k = 0; k < slides.length; k++) slides[k].style.transition = 'none';
+        }
         track.style.transform = 'translateX(' + tx + 'px)';
-        for (var k = 0; k < slides.length; k++) slides[k].classList.remove('is-center');
+        for (k = 0; k < slides.length; k++) slides[k].classList.remove('is-center');
         el.classList.add('is-center');
         if (!animate) {
-          // reflow して transition を戻す
+          // reflow してから transition を復元（以降のズームは通常どおりアニメ）
           void track.offsetWidth;
           track.style.transition = '';
+          for (k = 0; k < slides.length; k++) slides[k].style.transition = '';
         }
       }
 
