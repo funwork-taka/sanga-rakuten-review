@@ -1,0 +1,97 @@
+@charset "utf-8";
+/* =============================================================
+   食事 / PC版 固有スタイル。common.css 再利用。home_pc/rooms_pc は読み込まない。
+   独自クラス: sg-phero / sg-rintro / sg-meal / sg-menu
+   ============================================================= */
+
+/* ---- ページヒーロー（画像上に縦書きタイトル） ---- */
+.sg-phero { position: relative; width: 100vw; margin-left: calc(50% - 50vw); min-height: clamp(440px, 44vw, 720px);
+  display: flex; align-items: center; justify-content: center; overflow: hidden; text-align: center; }
+.sg-phero__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.sg-phero::after { content: ""; position: absolute; inset: 0; z-index: 1; background: rgba(22, 20, 17, .32); }
+.sg-phero__inner { position: relative; z-index: 2; color: #fff; display: flex; flex-direction: column; align-items: center; gap: clamp(20px, 2.6vw, 38px); }
+.sg-phero__tag span { writing-mode: vertical-rl; font-family: "Noto Serif JP", serif; font-weight: 500; font-size: clamp(15px, 1.32vw, 19px); letter-spacing: .22em; }
+.sg-phero__title { display: flex; flex-direction: row-reverse; justify-content: center; align-items: flex-start; gap: clamp(4px, .7vw, 10px); margin: 0; font-weight: 500; text-shadow: 0 2px 18px rgba(0,0,0,.35); }
+.sg-phero__title span { writing-mode: vertical-rl; font-size: clamp(30px, 3.9vw, 56px); letter-spacing: .12em; line-height: 1.06; }
+.sg-phero__en { margin: 0; font-family: "Noto Serif JP", serif; font-style: italic; font-size: clamp(12px, 1.24vw, 18px); letter-spacing: .12em; line-height: 1.7; opacity: .92; }
+
+/* ---- 導入（左:全高写真／中央:紹介文＋小魚／右:縦キャッチ。Figma 1448×848 を%配置） ---- */
+.sg-rintro { position: relative; width: 100%; max-width: 1448px; margin-inline: auto; aspect-ratio: 1448 / 848; }
+.sg-rintro__img { position: absolute; left: 0; top: 0; width: 41.44%; height: 100%; }
+.sg-rintro__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sg-rintro__center { position: absolute; left: 50.28%; bottom: 0; width: 27.5%; display: flex; flex-direction: column; align-items: flex-start; gap: clamp(30px, 3.9vw, 56px); }
+.sg-rintro__lead { margin: 0; font-size: clamp(15px, 1.24vw, 18px); line-height: 2; letter-spacing: .04em; color: var(--sg-ink); }
+.sg-rintro__fish { width: 100%; }
+.sg-rintro__fish img { width: 100%; aspect-ratio: 392 / 261; object-fit: cover; display: block; }
+.sg-rintro__catch { position: absolute; left: 85%; top: 34.6%; display: flex; flex-direction: row-reverse; align-items: flex-start; gap: clamp(8px, 1vw, 16px); }
+.sg-rintro__catch span { writing-mode: vertical-rl; font-family: "Noto Serif JP", serif; font-weight: 500; font-size: clamp(20px, 2.21vw, 32px); letter-spacing: .16em; line-height: 1.05; color: var(--sg-ink); }
+.sg-rintro__catch span:nth-of-type(2) { margin-top: 2.75em; }   /* 伊豆の幸… を階段状に下げる（Figma +88px） */
+
+/* ---- 食事セクション共通（ご夕食／ご朝食）。Figma: index=4.1%／本文=左19.9%インデント＋右端までブリード ---- */
+.sg-meal { position: relative; width: 100%; max-width: 1448px; margin-inline: auto; padding-block: clamp(48px, 6vw, 104px) 0; }
+.sg-meal__index { position: absolute; left: 4.1%; top: clamp(48px, 6vw, 104px); z-index: 2; display: flex; flex-direction: column; gap: clamp(8px, 1vw, 14px); }
+.sg-meal__index a { position: relative; padding-left: 15px; font-size: clamp(13px, 1vw, 16px); letter-spacing: .06em; color: var(--sg-ink); }
+.sg-meal__index a::before { content: ""; position: absolute; left: 0; top: .6em; width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .45; }
+.sg-meal__index a[aria-current="page"] { font-weight: 700; }
+/* 見出し=左19.9%(w22.1%)／リード=42%(w49.2%)／右余白1fr。Figma Frame 8597 実測 */
+.sg-meal__head { display: grid; grid-template-columns: 19.9% 22.1% minmax(0, 49.2%) 1fr; align-items: end; margin-bottom: clamp(28px, 3.5vw, 56px); }
+.sg-meal__title { grid-column: 2; }
+.sg-meal__title .sg-en { display: inline-block; background: none; color: #8c8c8c; padding: 0; letter-spacing: .18em; font-size: clamp(12px, 1vw, 16px); }
+.sg-meal__jp { margin: clamp(8px, 1vw, 14px) 0 0; font-family: "Noto Serif JP", serif; font-weight: 500; font-size: clamp(26px, 2.9vw, 40px); letter-spacing: .1em; }
+.sg-meal__lead { grid-column: 3; margin: 0 0 clamp(2px, .4vw, 8px); font-size: clamp(15px, 1.24vw, 18px); line-height: 2; letter-spacing: .03em; color: var(--sg-ink); }
+
+.sg-meal__hero { padding-left: 19.9%; }
+.sg-meal__hero img { width: 100%; aspect-ratio: 1160 / 560; object-fit: cover; display: block; }
+
+/* お食事開始時間（ラベル19.9%(w312)／本文42%(w712)。上下線=濃色#222・ラベル列とテキスト列で2分割） */
+.sg-meal__time { padding: 0 8.8% 0 19.9%; margin-top: clamp(30px, 4vw, 60px); }
+.sg-meal__time > div { display: flex; gap: clamp(6px, .6vw, 8px); }
+/* 上下線：ラベル列(dt)=#222222実線／テキスト列(dd)=#222222の16%（Figma fillOpacity実測） */
+.sg-meal__time dt, .sg-meal__time dd { padding-block: clamp(18px, 2vw, 26px); font-size: clamp(15px, 1.4vw, 18px); color: var(--sg-ink); }
+.sg-meal__time dt { flex: 0 0 30.2%; letter-spacing: .04em; border-top: 1px solid #222222; border-bottom: 1px solid #222222; }
+.sg-meal__time dd { margin: 0; flex: 1 1 auto; line-height: 1.8; letter-spacing: .02em; border-top: 1px solid rgba(34,34,34,.16); border-bottom: 1px solid rgba(34,34,34,.16); }
+.sg-meal__time .note { display: block; margin-top: 10px; color: #9a9a9a; font-size: .88em; }
+
+/* 或る日のお献立（見出し19.9%左寄せ＋横スクロールの品カード） */
+.sg-menu { margin-top: clamp(48px, 6vw, 100px); }
+.sg-menu__head { padding-left: 19.9%; margin-bottom: clamp(22px, 3vw, 44px); }
+.sg-menu__head .sg-en { display: inline-block; background: none; color: #8c8c8c; padding: 0; letter-spacing: .18em; font-size: clamp(12px, 1vw, 16px); }
+.sg-menu__jp { margin: clamp(8px, 1vw, 14px) 0 0; font-family: "Noto Serif JP", serif; font-weight: 500; font-size: clamp(24px, 2.7vw, 40px); letter-spacing: .1em; }
+/* トラックは全幅(100vw)。先頭カードは::beforeスペーサーでコンテンツ左端(=見出しと同じ19.9%位置)に合わせる。
+   スクロール時はカードが画面左外へ抜ける。末尾は::afterで少し余白。 */
+.sg-menu__track { display: flex; gap: clamp(14px, 1.6vw, 24px); overflow-x: auto;
+  width: 100vw; margin-left: calc(50% - 50vw); padding: 4px 0 clamp(16px, 2vw, 24px); }
+.sg-menu__track::before { content: ""; flex: 0 0 calc((100vw - min(100vw, 1448px)) / 2 + min(100vw, 1448px) * 0.199); }
+.sg-menu__track::after { content: ""; flex: 0 0 clamp(16px, 4vw, 40px); }
+.sg-menu__track::-webkit-scrollbar { height: 6px; }
+.sg-menu__track::-webkit-scrollbar-thumb { background: #d8d2ca; border-radius: 3px; }
+.sg-menu__card { flex: 0 0 clamp(200px, 21vw, 300px); }
+.sg-menu__card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+.sg-menu__cap { display: flex; align-items: flex-start; gap: clamp(8px, 1vw, 14px); margin: clamp(12px, 1.4vw, 18px) 0 0; }
+.sg-menu__cap .label { flex: 0 0 auto; writing-mode: vertical-rl; font-family: "Noto Serif JP", serif; font-weight: 500; font-size: clamp(16px, 1.4vw, 20px); letter-spacing: .1em; }
+.sg-menu__cap .name { flex: 1 1 auto; font-size: clamp(12px, 1vw, 16px); line-height: 1.7; letter-spacing: .02em; color: var(--sg-ink); }
+
+/* 干物カット（Frame 8606：左19.9%インデント／幅994。左=512²画像、右列=上に縦キャッチ(右寄せ)＋下に説明文(左寄せ)を縦積み） */
+.sg-meal__himono { max-width: 1448px; margin: clamp(56px, 7vw, 120px) auto 0; padding: 0 11.5% 0 19.9%;
+  display: flex; align-items: stretch; gap: clamp(24px, 5.4vw, 78px); }
+.sg-meal__himono-img { flex: 0 0 51.5%; }
+.sg-meal__himono-img img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+.sg-meal__himono-body { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: space-between; }
+.sg-meal__himono-catch { align-self: flex-end; display: flex; flex-direction: row-reverse; gap: clamp(6px, .7vw, 14px); }
+.sg-meal__himono-catch span { writing-mode: vertical-rl; font-family: "Noto Serif JP", serif; font-weight: 500; font-size: clamp(20px, 2.21vw, 32px); letter-spacing: .16em; line-height: 1.05; color: var(--sg-ink); }
+.sg-meal__himono-catch span:nth-of-type(2) { margin-top: 2em; }   /* 朝のごちそう を +64px 下へ */
+.sg-meal__himono-text { align-self: flex-start; width: 77%; margin: 0; font-size: clamp(15px, 1.24vw, 18px); line-height: 2; letter-spacing: .03em; color: var(--sg-ink); }
+
+/* =============================================================
+   共通フッター部品（PC）：home_pc.css と同一。自己完結のため内包
+   ============================================================= */
+.sg-search { width: min(1114px, 92vw); margin: clamp(88px, 11vw, 160px) auto clamp(40px, 5vw, 80px); aspect-ratio: 1114 / 566; position: relative; }
+.sg-search iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+.sg-footerband { position: relative; width: 100vw; margin-left: calc(50% - 50vw); background: #2e2e2e; overflow: hidden; min-height: clamp(470px, 48.3vw, 730px);
+  display: flex; align-items: center; justify-content: center; padding: clamp(48px, 6vw, 96px) 20px clamp(56px, 7vw, 118px); text-align: center; color: #fff; }
+.sg-footerband__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.sg-footerband::after { content: ""; position: absolute; inset: 0; z-index: 1; background: rgba(28, 28, 28, .5); }
+.sg-footerband__inner { position: relative; z-index: 2; }
+.sg-footerband__logo { width: clamp(118px, 11.4vw, 172px); height: auto; margin: 0 auto; }
+.sg-footerband__addr { margin: clamp(28px, 3.6vw, 56px) 0 0; font-size: clamp(13px, 1.06vw, 16px); font-weight: 500; line-height: 2.1; letter-spacing: .08em; }
+.sg-footerband__copy { position: absolute; left: 0; right: 0; bottom: clamp(18px, 2.6vw, 38px); z-index: 2; margin: 0; font-size: clamp(10px, .73vw, 11px); letter-spacing: .06em; opacity: .92; }

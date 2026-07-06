@@ -1,0 +1,173 @@
+@charset "utf-8";
+/* =============================================================
+   客室 / PC版 固有スタイル。common.css（フォント/和紙背景/トークン/ナビ/ボタン/
+   見出し部品）を再利用。home_pc.css は読み込まない＝.sg-rooms等の衝突回避。
+   ページ独自クラスは sg-phero / sg-rintro / sg-omo / sg-roomlist を使用。
+   ============================================================= */
+
+/* ---- ページヒーロー（客室：画像上に縦書きタイトル） ---- */
+.sg-phero {
+  position: relative; width: 100vw; margin-left: calc(50% - 50vw);
+  min-height: clamp(440px, 44vw, 720px);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; text-align: center;
+}
+.sg-phero__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.sg-phero::after { content: ""; position: absolute; inset: 0; z-index: 1; background: rgba(22, 20, 17, .30); }
+.sg-phero__inner {
+  position: relative; z-index: 2; color: #fff;
+  display: flex; flex-direction: column; align-items: center; gap: clamp(20px, 2.6vw, 38px);
+}
+.sg-phero__tag span {
+  writing-mode: vertical-rl; font-family: "Noto Serif JP", serif; font-weight: 500;
+  font-size: clamp(15px, 1.25vw, 18px); letter-spacing: .22em;
+}
+.sg-phero__title {
+  display: flex; flex-direction: row-reverse; justify-content: center; align-items: flex-start;
+  gap: clamp(4px, .7vw, 10px); margin: 0; font-weight: 500;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, .35);
+}
+.sg-phero__title span { writing-mode: vertical-rl; font-size: clamp(26px, 3.1vw, 44px); letter-spacing: .16em; line-height: 1.08; }
+.sg-phero__en {
+  margin: 0; font-family: "Noto Serif JP", serif; font-style: italic;
+  font-size: clamp(12px, 1vw, 15px); letter-spacing: .14em; line-height: 1.7; opacity: .92;
+}
+
+/* ---- 導入（左:全高写真／中央:紹介文＋丸窓／右:縦キャッチ） ---- */
+/* Figma(1448×1063アートボード)の実測座標を%に変換して精密配置。
+   画像=左0/幅41.44%/全高、中央文=左50.28%/下端揃え(bottom5%)/幅26%、
+   縦キャッチ=左81.77%/上11.3%(上寄せ)。セクション比は画像高さ基準1448/1063。 */
+.sg-rintro { position: relative; width: 100%; max-width: 1448px; margin-inline: auto; aspect-ratio: 1448 / 1063; }
+.sg-rintro__img { position: absolute; left: 0; top: 0; width: 41.44%; height: 100%; }
+.sg-rintro__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sg-rintro__center {
+  position: absolute; left: 50.28%; bottom: 5%; width: 26%;
+  display: flex; flex-direction: column; align-items: flex-start; gap: clamp(32px, 4.7vw, 64px);
+}
+.sg-rintro__lead { margin: 0; font-size: clamp(15px, 1.35vw, 18px); line-height: 2; letter-spacing: .04em; color: var(--sg-ink); }
+.sg-rintro__window { width: 72%; }                 /* 272 / (26%×1448=377) ≒ 72% */
+.sg-rintro__window img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+.sg-rintro__catch {
+  position: absolute; left: 81.77%; top: 11.3%;
+  display: flex; flex-direction: row-reverse; gap: clamp(8px, 1vw, 16px);
+}
+.sg-rintro__catch span {
+  writing-mode: vertical-rl; font-family: "Noto Serif JP", serif; font-weight: 500;
+  font-size: clamp(20px, 2.21vw, 32px); letter-spacing: .16em; line-height: 1.05; color: var(--sg-ink);
+}
+
+/* ---- 山龢のおもてなし（見出し＋3カード） ---- */
+.sg-omo { padding-block: clamp(64px, 8vw, 128px); }
+.sg-omo__head { text-align: center; margin-bottom: clamp(34px, 4vw, 64px); }
+.sg-omo__en { display: inline-block; color: var(--sg-ink); letter-spacing: .22em; font-size: clamp(13px, 1.1vw, 16px); }
+.sg-omo__title { margin: clamp(10px, 1.2vw, 18px) 0 0; font-family: "Noto Serif JP", serif; font-weight: 500; font-size: clamp(22px, 2.1vw, 32px); letter-spacing: .1em; }
+.sg-omo__grid {
+  max-width: var(--sg-content); margin-inline: auto; padding-inline: clamp(16px, 4vw, 40px);
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2vw, 34px);
+}
+/* カード＝ぼかし背景(大画像 blur＋黒40%tint)＋くっきり小画像(同一画像)＋縦ラベル＋番号。
+   小画像/ラベル/番号は Figma実測(482×677基準)を%配置。 */
+.sg-omo__media { position: relative; aspect-ratio: 482 / 677; overflow: hidden; }
+.sg-omo__blur { position: absolute; inset: -6%; width: 112%; height: 112%; object-fit: cover; filter: blur(13px); z-index: 0; }
+.sg-omo__tint { position: absolute; inset: 0; z-index: 1; background: rgba(0, 0, 0, .4); }
+.sg-omo__crisp { position: absolute; left: 17.6%; top: 29.5%; width: 39.8%; height: 39.7%; object-fit: cover; z-index: 2; display: block; }
+.sg-omo__no { position: absolute; left: 17.6%; top: 11.8%; z-index: 3;
+  color: #fff; font-size: clamp(11px, .95vw, 13px); letter-spacing: .1em; text-shadow: 0 1px 6px rgba(0, 0, 0, .5); }
+.sg-omo__label { position: absolute; left: 68.3%; top: 11.8%; z-index: 3;
+  display: flex; flex-direction: row-reverse; gap: clamp(3px, .45vw, 7px); }
+.sg-omo__label span { writing-mode: vertical-rl; color: #fff; font-family: "Noto Serif JP", serif; font-weight: 500;
+  font-size: clamp(15px, 1.4vw, 20px); letter-spacing: .14em; line-height: 1.05; text-shadow: 0 1px 10px rgba(0, 0, 0, .5); }
+/* 説明文＝カード内側・下部に白文字で重ねる（Figma: 左17.6%/上74%/幅64.7%・#e6e6e6・18px/行1.8） */
+.sg-omo__desc { position: absolute; left: 17.6%; top: 73.5%; width: 64.7%; z-index: 3; margin: 0;
+  color: #e9e9e9; font-size: clamp(12px, 1.15vw, 16px); line-height: 1.8; letter-spacing: .02em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, .45); }
+
+/* ---- 館内案内図（左テキスト＋右アイソメ図。Figma 1448×810 を%配置） ---- */
+.sg-floormap { position: relative; width: 100%; max-width: 1448px; margin-inline: auto; aspect-ratio: 1448 / 810; }
+.sg-floormap__text { position: absolute; left: 6.1%; top: 33%; width: 22%; }
+.sg-floormap__title { margin: 0 0 clamp(14px, 1.6vw, 24px); font-family: "Noto Serif JP", serif; font-weight: 500; font-size: clamp(18px, 1.65vw, 24px); letter-spacing: .1em; }
+.sg-floormap__desc { margin: 0; font-size: clamp(14px, 1.24vw, 18px); line-height: 2; letter-spacing: .02em; color: var(--sg-ink); }
+.sg-floormap__img { position: absolute; left: 33.7%; top: 14.8%; width: 60.2%; height: auto; display: block; }
+
+/* =============================================================
+   客室一覧（左sticky索引＋貴賓館/本館グループ＋各室）
+   ============================================================= */
+.sg-roomlist { padding-block: clamp(40px, 5vw, 96px); }
+.sg-roomlist__wrap { max-width: 1448px; margin-inline: auto; padding-inline: clamp(16px, 3vw, 48px);
+  display: flex; gap: clamp(20px, 3vw, 52px); align-items: flex-start; }
+
+/* 左：sticky 索引（.sg は overflow-x:clip なので sticky が効く） */
+.sg-roomnav { position: sticky; top: clamp(24px, 9vh, 96px); flex: 0 0 auto; width: clamp(112px, 12vw, 152px); }
+.sg-roomnav ul { list-style: none; margin: 0 0 clamp(20px, 2.4vw, 34px); padding: 0; display: flex; flex-direction: column; gap: clamp(12px, 1.4vw, 20px); }
+.sg-roomnav a { display: block; position: relative; padding-left: 15px; font-size: clamp(12px, .95vw, 14px); letter-spacing: .06em; color: var(--sg-ink); transition: opacity .2s; }
+.sg-roomnav a::before { content: ""; position: absolute; left: 0; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .45; }
+.sg-roomnav a:hover { opacity: .55; }
+.sg-roomnav__thumb { width: 74%; height: auto; display: block; }
+
+/* 右：本文 */
+.sg-roomlist__main { flex: 1 1 auto; min-width: 0; }
+.sg-roomgroup + .sg-roomgroup { margin-top: clamp(50px, 6vw, 112px); }
+.sg-roomgroup__head { display: flex; gap: clamp(20px, 3vw, 56px); align-items: flex-start; margin-bottom: clamp(28px, 3.5vw, 60px); }
+.sg-roomgroup__name { flex: 0 0 auto; margin: 0; display: flex; gap: 6px; align-items: flex-start; }
+.sg-roomgroup__name .jp { writing-mode: vertical-rl; font-family: "Noto Serif JP", serif; font-weight: 500; font-size: clamp(22px, 2.2vw, 34px); letter-spacing: .12em; }
+.sg-roomgroup__name .en { writing-mode: vertical-rl; font-size: clamp(10px, .82vw, 12px); letter-spacing: .1em; color: #8c8c8c; padding-top: 4px; }
+.sg-roomgroup__intro { margin: 0; font-size: clamp(15px, 1.24vw, 18px); line-height: 2; letter-spacing: .02em; color: var(--sg-ink); max-width: 820px; }
+
+/* 各室 */
+.sg-room { display: flex; gap: clamp(14px, 1.8vw, 36px); align-items: flex-start; scroll-margin-top: clamp(24px, 9vh, 96px); }
+.sg-room + .sg-room { margin-top: clamp(40px, 5vw, 96px); }
+.sg-room__side { flex: 0 0 auto; width: clamp(72px, 7.5vw, 112px); display: flex; flex-direction: column; align-items: center; }
+/* 名前：貴賓室(28px)と山(28px)＝同サイズで縦に積む（Figma実測 fs28/fs28。山を大きくしない） */
+.sg-room__name { margin: 0; display: flex; flex-direction: column; align-items: center; gap: clamp(4px, .5vw, 8px); }
+.sg-room__name span { writing-mode: vertical-rl; font-family: "Noto Serif JP", serif; font-weight: 500; color: var(--sg-ink); font-size: clamp(20px, 1.95vw, 28px); letter-spacing: .1em; line-height: 1.12; }
+/* ４階：グレー角ピル #edeceb（Figma padding 6/4・角丸なし） */
+.sg-room__floor { writing-mode: vertical-rl; margin: clamp(16px, 1.7vw, 28px) 0 0; background: #edeceb; color: var(--sg-ink);
+  font-size: clamp(12px, 1.1vw, 16px); letter-spacing: .06em; padding: clamp(5px, .55vw, 8px) clamp(3px, .3vw, 5px); }
+/* プランを見る：縦書き＋左縦線(border #222)＋下に四角ボタン */
+.sg-room__plan { margin-top: clamp(18px, 2vw, 32px); display: flex; flex-direction: column; align-items: center; gap: clamp(12px, 1.3vw, 20px);
+  border-left: 1px solid #222; padding: clamp(4px, .5vw, 8px) 0 0 clamp(9px, .95vw, 14px); transition: opacity .2s; }
+.sg-room__plan > span:first-child { writing-mode: vertical-rl; font-size: clamp(13px, 1.25vw, 18px); letter-spacing: .14em; color: var(--sg-ink); }
+.sg-room__plan:hover { opacity: .6; }
+/* ボタン：#222 の四角＋薄色(#edeceb)の右向き三角▶（丸ではない） */
+.sg-room__btn { width: clamp(18px, 1.7vw, 22px); aspect-ratio: 1; background: #222; display: flex; align-items: center; justify-content: center; }
+.sg-room__btn::after { content: ""; border-left: clamp(5px, .5vw, 7px) solid #edeceb; border-top: clamp(3px, .32vw, 4px) solid transparent; border-bottom: clamp(3px, .32vw, 4px) solid transparent; }
+
+.sg-room__body { flex: 1 1 auto; min-width: 0; }
+.sg-room__grid { width: 100%; aspect-ratio: 1000 / 810; object-fit: cover; display: block; }
+
+/* アコーディオン（<details> = JS不要） */
+.sg-acc { border-bottom: 1px solid #ddd7cd; }
+.sg-acc:first-of-type { border-top: 1px solid #ddd7cd; margin-top: clamp(18px, 2vw, 30px); }
+.sg-acc > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px;
+  padding: clamp(13px, 1.4vw, 20px) 4px; font-size: clamp(15px, 1.24vw, 18px); letter-spacing: .06em; color: var(--sg-ink); }
+.sg-acc > summary::-webkit-details-marker { display: none; }
+.sg-acc > summary::before { content: ""; width: 8px; height: 8px; border-right: 1.4px solid var(--sg-ink); border-bottom: 1.4px solid var(--sg-ink); transform: rotate(45deg); transition: transform .2s; }
+.sg-acc[open] > summary::before { transform: rotate(-135deg); }
+.sg-spec { margin: 0; padding: 0 4px clamp(18px, 1.8vw, 28px); }
+.sg-spec > div { display: flex; gap: 14px; padding: clamp(7px, .8vw, 11px) 0; border-top: 1px dotted #e2dccf; font-size: clamp(14px, 1.2vw, 17px); line-height: 1.7; }
+.sg-spec > div:first-child { border-top: 0; }
+.sg-spec dt { flex: 0 0 auto; width: clamp(64px, 7vw, 100px); color: #8a8a8a; letter-spacing: .06em; }
+.sg-spec dd { margin: 0; flex: 1 1 auto; color: var(--sg-ink); }
+.sg-equip { padding: 0 4px clamp(18px, 1.8vw, 28px); font-size: clamp(14px, 1.2vw, 17px); line-height: 1.9; color: var(--sg-ink); }
+.sg-equip p { margin: 0 0 clamp(9px, 1vw, 15px); }
+.sg-equip p:last-child { margin-bottom: 0; }
+.sg-equip .note { display: block; color: #9a9a9a; font-size: .86em; margin-top: 3px; }
+
+/* =============================================================
+   共通フッター部品（PC）：home_pc.css と同一。全PCサブページで再利用のため内包
+   ============================================================= */
+.sg-search { width: min(1114px, 92vw); margin: clamp(40px, 5vw, 80px) auto; aspect-ratio: 1114 / 566; position: relative; }
+.sg-search iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+
+.sg-footerband {
+  position: relative; width: 100vw; margin-left: calc(50% - 50vw);
+  background: #2e2e2e; overflow: hidden; min-height: clamp(470px, 48.3vw, 730px);
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(48px, 6vw, 96px) 20px clamp(56px, 7vw, 118px); text-align: center; color: #fff;
+}
+.sg-footerband__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.sg-footerband::after { content: ""; position: absolute; inset: 0; z-index: 1; background: rgba(28, 28, 28, .5); }
+.sg-footerband__inner { position: relative; z-index: 2; }
+.sg-footerband__logo { width: clamp(118px, 11.4vw, 172px); height: auto; margin: 0 auto; }
+.sg-footerband__addr { margin: clamp(28px, 3.6vw, 56px) 0 0; font-size: clamp(13px, 1.06vw, 16px); font-weight: 500; line-height: 2.1; letter-spacing: .08em; }
+.sg-footerband__copy { position: absolute; left: 0; right: 0; bottom: clamp(18px, 2.6vw, 38px); z-index: 2; margin: 0; font-size: clamp(10px, .73vw, 11px); letter-spacing: .06em; opacity: .92; }

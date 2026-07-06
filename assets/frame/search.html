@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>空室検索</title>
+<!-- 空室検索カレンダー（自社サーバHTML→iframe埋込）。2ヶ月インライン範囲カレンダー＋人数/部屋数選択。
+     「空室検索」で楽天の空室検索URL(hotelinfo/plan/)へ日付・人数をGET送信(target=_top)。
+     ▼要差替: {{F_NO}} = 楽天施設ID（f_no）。iframe内=JS自由。 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #fff; font-family: "Shippori Mincho", serif; color: #333; }
+  .sc { max-width: 1114px; margin: 0 auto; padding: 4px; }
+
+  /* flatpickr インラインを2ヶ月・明朝・ミニマルに */
+  .sc .flatpickr-calendar.inline { box-shadow: none; margin: 0 auto; }
+  .sc .flatpickr-calendar { font-family: inherit; width: auto; }
+  /* width:auto でカレンダーが全幅化するため、中の日付グリッドを中央寄せ（1ヶ月/2ヶ月とも） */
+  .sc .flatpickr-innerContainer { justify-content: center; }
+  .sc .flatpickr-months { padding: 4px 0 10px; }
+  .sc .flatpickr-current-month { font-size: 1.15rem; font-weight: 500; }
+  .sc span.flatpickr-weekday { color: #333; font-weight: 500; }
+  .sc .flatpickr-day { color: #333; border-radius: 2px; }
+  .sc .flatpickr-day.flatpickr-disabled { color: #ccc; }
+  .sc .flatpickr-day.selected,
+  .sc .flatpickr-day.startRange,
+  .sc .flatpickr-day.endRange { background: #333; border-color: #333; color: #fff; }
+  .sc .flatpickr-day.inRange { background: #efe9e2; border-color: #efe9e2; box-shadow: -5px 0 0 #efe9e2, 5px 0 0 #efe9e2; }
+  .sc .flatpickr-day:hover { background: #f1ece6; border-color: #f1ece6; }
+  .sc .flatpickr-months .flatpickr-prev-month svg,
+  .sc .flatpickr-months .flatpickr-next-month svg { fill: #333; }
+
+  /* フォーム行 */
+  .sc__form { display: flex; align-items: stretch; justify-content: center; flex-wrap: wrap;
+    gap: 10px; margin-top: 22px; }
+  .sc__field { border: 1px solid #d8d2ca; min-width: 168px; padding: 8px 16px; text-align: center; background: #fff; }
+  .sc__field .lbl { display: block; font-size: 12px; color: #888; letter-spacing: .08em; }
+  .sc__field .val { display: block; font-size: 15px; margin-top: 3px; }
+  .sc__sel { position: relative; }
+  .sc__sel select { appearance: none; -webkit-appearance: none; border: 1px solid #d8d2ca; background: #fff;
+    font-family: inherit; font-size: 15px; color: #333; padding: 0 34px 0 18px; height: 100%; min-height: 52px;
+    min-width: 96px; cursor: pointer; }
+  .sc__sel::after { content: ""; position: absolute; right: 14px; top: 50%; width: 8px; height: 8px;
+    border-right: 1px solid #666; border-bottom: 1px solid #666; transform: translateY(-70%) rotate(45deg); pointer-events: none; }
+  .sc__submit { border: 0; background: #333; color: #fff; font-family: inherit; font-size: 16px; letter-spacing: .1em;
+    padding: 0 30px; min-height: 52px; cursor: pointer; transition: opacity .2s; }
+  .sc__submit:hover { opacity: .85; }
+  .sc__reset { display: block; margin: 16px auto 6px; border: 1px solid #d8d2ca; background: #fff; color: #555;
+    font-family: inherit; font-size: 14px; letter-spacing: .08em; padding: 10px 0; width: min(430px, 80%); cursor: pointer; }
+  .sc__reset:hover { background: #faf7f3; }
+</style>
+</head>
+<body>
+  <form class="sc" id="scForm" method="get" action="https://hotel.travel.rakuten.co.jp/hotelinfo/plan/" target="_top">
+    <input type="hidden" name="f_no" value="{{F_NO}}">
+    <input type="hidden" name="f_nen1" id="f_nen1"><input type="hidden" name="f_tuki1" id="f_tuki1"><input type="hidden" name="f_hi1" id="f_hi1">
+    <input type="hidden" name="f_nen2" id="f_nen2"><input type="hidden" name="f_tuki2" id="f_tuki2"><input type="hidden" name="f_hi2" id="f_hi2">
+    <input type="hidden" name="f_flg" value="PLAN">
+
+    <div id="cal"></div>
+
+    <div class="sc__form">
+      <div class="sc__field"><span class="lbl">チェックイン</span><span class="val" id="ciLbl">日付を選択</span></div>
+      <div class="sc__field"><span class="lbl">チェックアウト</span><span class="val" id="coLbl">日付を選択</span></div>
+      <div class="sc__sel">
+        <select name="f_heya_su" aria-label="部屋数">
+          <option value="1">1室</option><option value="2">2室</option><option value="3">3室</option>
+          <option value="4">4室</option><option value="5">5室</option>
+        </select>
+      </div>
+      <div class="sc__sel">
+        <select name="f_otona_su" aria-label="大人人数">
+          <option value="1">1人</option><option value="2" selected>2人</option><option value="3">3人</option>
+          <option value="4">4人</option><option value="5">5人</option><option value="6">6人</option>
+        </select>
+      </div>
+      <button type="submit" class="sc__submit">空室検索</button>
+    </div>
+    <button type="button" class="sc__reset" id="scReset">reset</button>
+  </form>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/ja.min.js"></script>
+  <script>
+    (function () {
+      var W = ['日','月','火','水','木','金','土'];
+      function fmt(d) { return d.getFullYear() + '/' + ('0'+(d.getMonth()+1)).slice(-2) + '/' + ('0'+d.getDate()).slice(-2) + '（' + W[d.getDay()] + '）'; }
+      function put(id, v) { document.getElementById(id).value = v; }
+      var fp = flatpickr('#cal', {
+        inline: true, mode: 'range', showMonths: (window.innerWidth < 600 ? 1 : 2), minDate: 'today',
+        locale: 'ja', dateFormat: 'Y/m/d',
+        onChange: function (sel) {
+          if (sel[0]) { document.getElementById('ciLbl').textContent = fmt(sel[0]);
+            put('f_nen1', sel[0].getFullYear()); put('f_tuki1', sel[0].getMonth()+1); put('f_hi1', sel[0].getDate()); }
+          if (sel[1]) { document.getElementById('coLbl').textContent = fmt(sel[1]);
+            put('f_nen2', sel[1].getFullYear()); put('f_tuki2', sel[1].getMonth()+1); put('f_hi2', sel[1].getDate()); }
+        }
+      });
+      document.getElementById('scForm').addEventListener('submit', function (e) {
+        if (!document.getElementById('f_hi1').value || !document.getElementById('f_hi2').value) {
+          e.preventDefault(); alert('チェックイン・チェックアウトの日付を選択してください。');
+        }
+      });
+      document.getElementById('scReset').addEventListener('click', function () {
+        fp.clear();
+        document.getElementById('ciLbl').textContent = '日付を選択';
+        document.getElementById('coLbl').textContent = '日付を選択';
+        ['f_nen1','f_tuki1','f_hi1','f_nen2','f_tuki2','f_hi2'].forEach(function (id) { put(id, ''); });
+      });
+    })();
+  </script>
+</body>
+</html>

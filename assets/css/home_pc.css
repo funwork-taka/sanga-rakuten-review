@@ -1,0 +1,433 @@
+@charset "utf-8";
+/* =============================================================
+   HOME_PC 固有スタイル
+   §1 ヒーロー(MV)：全幅・100vh・動画背景（テスト時はポスター画像）＋中央ロゴ
+   ============================================================= */
+
+/* ---- §1 ヒーロー ---- */
+.sg-hero {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);       /* 950px枠でも全幅化 */
+  height: 100vh;
+  min-height: 560px;
+  overflow: hidden;
+  /* 動画が読めない/差し替え前でも必ず絵が出るよう、ポスターをCSS背景にも敷く */
+  background: #1a1613 url('../img/hero-poster.jpg') center center / cover no-repeat;
+}
+/* 背景動画：純HTML（<video>）。JSは使わない。
+   ※楽天保存時に <video> が除去される環境では、上のCSS背景ポスターが残る */
+.sg-hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+/* 中央のブランドロゴ（雅の宿 山龢） */
+.sg-hero__logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  width: clamp(168px, 15.4vw, 240px);
+  height: auto;
+  filter: drop-shadow(0 2px 12px rgba(0,0,0,.35));
+}
+
+/* =============================================================
+   §3 コンセプト帯
+   上=左寄せ写真＋右余白 / 中央=山龢ネームロゴ＋コンセプト文 / 下=右寄せ写真＋左余白
+   写真は片側を画面端までブリード、反対側に可変パディング（デザインの余白バランス踏襲）
+   ============================================================= */
+.sg-concept {
+  padding-block: clamp(40px, 6vw, 96px);
+}
+/* 画像ブロック：100vwラッパ内で片側寄せ、反対側が余白になる */
+.sg-concept__img {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  display: flex;
+}
+.sg-concept__img img {
+  width: 80.5vw;                 /* 1220/1512 ≒ 80.5% を維持 */
+  height: auto;
+  aspect-ratio: 1220 / 671;
+  object-fit: cover;
+}
+.sg-concept__img--left  img { margin-right: auto; }   /* 左端ブリード・右に余白 */
+.sg-concept__img--right img { margin-left: auto;  }   /* 右端ブリード・左に余白 */
+
+/* 中央リード（ネームロゴ＋コンセプト文） */
+.sg-concept__lead {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(24px, 3vw, 40px);
+  padding-block: clamp(40px, 5vw, 72px);
+}
+.sg-concept__mark {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.sg-concept__mark img { width: clamp(74px, 6.4vw, 98px); height: auto; }
+.sg-concept__ruby {
+  writing-mode: vertical-rl;
+  font-size: 15px;
+  letter-spacing: .22em;
+  line-height: 1;
+  color: var(--sg-ink);
+  padding-top: 4px;
+}
+.sg-concept__text {
+  margin: 0;
+  font-size: clamp(16px, 1.35vw, 20px);
+  line-height: 1.75;
+  letter-spacing: .04em;
+  color: var(--sg-ink);
+}
+
+/* =============================================================
+   §4 眺望シーン（相模湾）
+   全幅の動画バンド＋上下を白フェードでページに溶かす／左に濃色テキスト
+   ============================================================= */
+.sg-scene {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  min-height: clamp(460px, 49.5vw, 760px);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+/* 上下フェードは白オーバーレイだと和紙背景と合わず上下辺に切れ目が出る。
+   → 映像自体を上下へmaskで透明フェードし、端で和紙を透かして境目を消す（roomvidと同方式） */
+.sg-scene__media { position: absolute; inset: 0; z-index: 0;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 24%, #000 76%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0%, #000 24%, #000 76%, transparent 100%); }
+.sg-scene__media video,
+.sg-scene__media img { width: 100%; height: 100%; object-fit: cover; }
+
+.sg-scene__body { position: relative; z-index: 2; width: 100%; }
+.sg-scene__title {
+  margin: 0;
+  font-weight: 500;   /* Shippori Mincho Regular→Medium（全ページ共通ルール） */
+  font-size: clamp(21px, 1.85vw, 28px);
+  letter-spacing: .12em;
+  color: var(--sg-ink);
+}
+.sg-scene__lead {
+  margin: clamp(18px, 2vw, 30px) 0 0;
+  font-size: clamp(17px, 1.45vw, 22px);
+  letter-spacing: .1em;
+  color: var(--sg-ink);
+}
+.sg-scene__note {
+  margin: 8px 0 0;
+  font-size: clamp(13px, 1.06vw, 16px);
+  letter-spacing: .06em;
+  color: var(--sg-ink);
+}
+/* Figma: 行高180% ＋ ドロップシャドウ(白 offset0,0 blur20)。
+   ※Figmaの1発をCSS text-shadow 1発にすると薄すぎる（CSSはspread非対応で拡散して密度が出ない）。
+     同じ白シャドウを複数レイヤー重ねて密度を上げ、Figmaの見た目に合わせる */
+.sg-scene__title,
+.sg-scene__lead,
+.sg-scene__note {
+  line-height: 1.8;
+  text-shadow:
+    0 0 20px #ffffff,
+    0 0 20px #ffffff;
+}
+
+/* =============================================================
+   §5 ギャラリー（カルーセル：iframe方式）
+   左=カルーセル(1200x800=3:2, 画面左端までブリード) / 右=縦書きキャプション(実テキスト=SEO)
+   カルーセル本体は自社サーバHTML(assets/frame/carousel1.html)をiframe埋め込み
+   ============================================================= */
+.sg-gallery {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding-block: clamp(40px, 5vw, 84px);
+  display: flex;
+  align-items: stretch;
+  gap: clamp(16px, 2.2vw, 36px);
+}
+/* iframeラッパ：JSなしで縦横比固定（aspect-ratio + 絶対配置） */
+.sg-carousel {
+  flex: 0 0 auto;
+  width: 79vw;
+  aspect-ratio: 3 / 2;
+  position: relative;
+  overflow: hidden;
+}
+.sg-carousel iframe {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border: 0; display: block;
+}
+/* 右の縦書きキャプション列 */
+.sg-gallery__cap {
+  flex: 1 1 auto;
+  position: relative;
+  padding-right: clamp(14px, 13vw, 200px);
+}
+.sg-vgroup {
+  position: absolute;
+  right: clamp(14px, 13vw, 200px);
+  display: flex;
+  flex-direction: row-reverse;      /* 先頭要素を右に＝縦書きの読み順(右→左) */
+  gap: clamp(6px, .7vw, 12px);
+}
+.sg-vgroup span {
+  writing-mode: vertical-rl;
+  color: var(--sg-ink);
+  line-height: 1.05;
+}
+.sg-vgroup--head { top: clamp(4px, 1vw, 16px); }
+.sg-vgroup--head span { font-size: clamp(20px, 1.85vw, 28px); letter-spacing: .16em; }
+.sg-vgroup--sub  { top: 56%; }
+.sg-vgroup--sub span { font-size: clamp(14px, 1.06vw, 16px); letter-spacing: .12em; }
+
+/* =============================================================
+   §6 客室セクション（見出し＋中央拡大カルーセル＋締め文）
+   ============================================================= */
+.sg-rooms { padding-block: clamp(56px, 7vw, 112px); position: relative; }
+
+/* Frame24：見出し背景の右寄せゴースト映像。
+   Figma実測 x=450〜1512(幅1062/1512≒70.2%)・y=セクション上端-120px・1062×924。
+   白オーバーレイでなく四辺maskで透明フェード＝和紙背景になじませ境界を出さない（SPと同方式） */
+.sg-rooms__ghostvid {
+  position: absolute; z-index: 0; pointer-events: none;
+  top: calc(-120 / 1512 * 100vw);          /* セクション上端より120px上（≒-7.9vw） */
+  right: calc(50% - 50vw);                  /* ビューポート右端に寄せる（full-bleed right） */
+  width: calc(1062 / 1512 * 100vw);         /* ≒70.2vw */
+  aspect-ratio: 1062 / 924;
+}
+.sg-rooms__ghostvid video {
+  width: 100%; height: 100%; object-fit: cover; opacity: .15;  /* テキスト可読性優先で薄く（白く） */
+  -webkit-mask-image:
+    linear-gradient(to right,  transparent 0%, #000 20%, #000 80%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  -webkit-mask-composite: source-in;
+          mask-image:
+    linear-gradient(to right,  transparent 0%, #000 20%, #000 80%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%);
+          mask-composite: intersect;
+}
+/* 見出し・カルーセル・締め文はゴースト映像より前面に */
+.sg-rooms__head, .sg-rooms__carousel, .sg-rooms__foot { position: relative; z-index: 1; }
+
+/* 見出しブロック */
+.sg-rooms__tag { text-align: center; margin: 0 0 clamp(22px, 3vw, 44px); }
+.sg-rooms__tag span {
+  writing-mode: vertical-rl;
+  font-family: "Noto Serif JP", serif;
+  font-weight: 500;
+  font-size: clamp(18px, 1.5vw, 22px);
+  letter-spacing: .18em;
+  color: var(--sg-ink);
+}
+.sg-rooms__titlerow {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 24px; margin-bottom: clamp(20px, 2.4vw, 34px);
+}
+.sg-rooms__title {
+  margin: 0; font-weight: 500;
+  font-size: clamp(19px, 1.55vw, 22px);
+  letter-spacing: .1em;
+}
+.sg-rooms__en {
+  flex: 0 0 auto;
+  display: inline-flex; align-items: center; gap: 14px;
+  background: var(--sg-ink); color: #fff;
+  font-size: clamp(15px, 1.25vw, 18px); font-weight: 500;
+  letter-spacing: .18em; padding: 6px 18px;
+}
+.sg-rooms__en::after { content: ""; width: 60px; height: 1px; background: #fff; }
+.sg-rooms__intro {
+  margin: 0; font-size: clamp(14px, 1.1vw, 16px);
+  line-height: 1.95; letter-spacing: .03em; color: var(--sg-ink);
+}
+
+/* 中央拡大カルーセル（iframe）。中央が scale で拡大しても縦に切れないよう高さに余裕を持たせる */
+.sg-rooms__carousel {
+  width: 100vw; margin-left: calc(50% - 50vw);
+  aspect-ratio: 100 / 36;
+  position: relative;
+  margin-block: clamp(24px, 3vw, 52px);
+}
+.sg-rooms__carousel iframe {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  border: 0; display: block;
+}
+
+/* =============================================================
+   §7 食事セクション（【食事】ラベル → 横スライドカルーセル → 見出し＋FOOD → 説明文）
+   ============================================================= */
+.sg-food { padding-block: clamp(56px, 7vw, 112px); }
+.sg-food > .sg-sectag { margin: 0 0 clamp(22px, 3vw, 44px); }
+.sg-food__carousel {
+  width: 100vw; margin-left: calc(50% - 50vw);
+  aspect-ratio: 1512 / 600;
+  position: relative;
+}
+.sg-food__carousel iframe {
+  position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block;
+}
+.sg-food__text { margin-top: clamp(26px, 3.4vw, 54px); }
+.sg-food__text .sg-titlerow { margin-bottom: clamp(18px, 2.2vw, 30px); }
+
+/* =============================================================
+   §11 フッター（[search]空室検索 ＋ [背景全幅]暗色フッター帯）
+   ※[rakuten-default]（楽天標準チャーム）は実装対象外
+   ============================================================= */
+/* [search] 空室検索（iframe・幅1114相当を中央寄せ） */
+.sg-search {
+  width: min(1114px, 92vw);
+  margin: clamp(40px, 5vw, 80px) auto clamp(40px, 5vw, 80px);
+  aspect-ratio: 1114 / 566;
+  position: relative;
+}
+.sg-search iframe {
+  position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block;
+}
+
+/* [背景全幅] 暗色フッター帯（夕景背景＋白ロゴ＋住所＋コピーライト） */
+.sg-footerband {
+  position: relative;
+  width: 100vw; margin-left: calc(50% - 50vw);
+  background: #2e2e2e; overflow: hidden;
+  min-height: clamp(470px, 48.3vw, 730px);   /* Figma 730/1512 比。コピーライトを最下部に置く余白を確保 */
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(48px, 6vw, 96px) 20px clamp(56px, 7vw, 118px);
+  text-align: center; color: #fff;
+}
+.sg-footerband__bg {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;
+}
+.sg-footerband::after {           /* 白文字可読のための暗いオーバーレイ */
+  content: ""; position: absolute; inset: 0; z-index: 1;
+  background: rgba(28, 28, 28, .5);
+}
+.sg-footerband__inner { position: relative; z-index: 2; }
+.sg-footerband__logo { width: clamp(118px, 11.4vw, 172px); height: auto; margin: 0 auto; }
+.sg-footerband__addr {
+  margin: clamp(28px, 3.6vw, 56px) 0 0;
+  font-size: clamp(13px, 1.06vw, 16px); font-weight: 500;
+  line-height: 2.1; letter-spacing: .08em;
+}
+.sg-footerband__copy {
+  position: absolute; left: 0; right: 0; bottom: clamp(18px, 2.6vw, 38px);
+  z-index: 2; margin: 0;
+  font-size: clamp(10px, .73vw, 11px); letter-spacing: .06em; opacity: .92;
+}
+
+/* =============================================================
+   §10 アクセス（左＝Googleマップ＋アクセス情報／右＝縦書き）。右パディング可変
+   ============================================================= */
+.sg-access {
+  width: 100vw; margin-left: calc(50% - 50vw);
+  padding-block: clamp(50px, 6.5vw, 96px);
+}
+.sg-access__row {
+  display: flex; align-items: flex-start;
+  padding-right: clamp(24px, 15vw, 300px);   /* 右パディング可変 */
+}
+.sg-access__main { flex: 0 0 auto; width: min(949px, 63vw); }
+/* Googleマップ埋め込み（グレースケールでデザインの色調に寄せる） */
+.sg-access__map {
+  position: relative; width: 100%; aspect-ratio: 949 / 465; overflow: hidden;
+}
+.sg-access__map iframe {
+  position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block;
+  filter: grayscale(1) contrast(.95) brightness(1.05);
+}
+.sg-access__info {
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 24px;
+  margin-top: clamp(22px, 2.8vw, 42px);
+  padding-left: clamp(16px, 3.4vw, 48px);
+}
+.sg-access__routes p {
+  margin: 0; font-size: clamp(13px, 1.06vw, 16px);
+  line-height: 1.85; letter-spacing: .04em; color: var(--sg-ink);
+}
+.sg-access__routes p + p { margin-top: clamp(14px, 1.6vw, 22px); }
+
+/* 右：縦書き */
+.sg-access__side {
+  flex: 0 0 auto; margin-left: auto;
+  display: flex; flex-direction: column; align-items: center;
+  gap: clamp(28px, 5vw, 84px); padding-left: clamp(16px, 2vw, 40px);
+}
+.sg-access__side .sg-access__tag {
+  margin: 0; writing-mode: vertical-rl;
+  font-family: "Noto Serif JP", serif; font-weight: 500;
+  font-size: clamp(16px, 1.5vw, 22px); letter-spacing: .2em; color: var(--sg-ink);
+}
+.sg-access__vtext { display: flex; gap: clamp(8px, 1vw, 16px); }
+.sg-access__vtext span {
+  writing-mode: vertical-rl; line-height: 1.05;
+  font-size: clamp(15px, 1.35vw, 20px); letter-spacing: .1em; color: var(--sg-ink);
+}
+
+/* =============================================================
+   §9 過ごし方（タイムライン連動フェードカルーセル：iframe）
+   ============================================================= */
+.sg-spend {
+  width: 100vw; margin-left: calc(50% - 50vw);
+  aspect-ratio: 1512 / 1150;
+  position: relative;
+}
+.sg-spend iframe {
+  position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block;
+}
+
+/* =============================================================
+   §8 全館貸切（全幅背景写真＋右に白文字。影なし）
+   ============================================================= */
+.sg-private {
+  position: relative;
+  width: 100vw; margin-left: calc(50% - 50vw);
+  aspect-ratio: 1512 / 897;
+  overflow: hidden;
+}
+.sg-private__bg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+.sg-private__body {
+  position: absolute; top: 20%; right: 5.6%;
+  width: clamp(240px, 27.5vw, 396px);
+  color: #ffffff; z-index: 2;
+  text-align: center;                 /* ブロック内で中央揃え */
+}
+.sg-private__tag { text-align: center; margin: 0 0 clamp(12px, 1.6vw, 22px); }
+.sg-private__tag span {
+  writing-mode: vertical-rl;
+  font-family: "Noto Serif JP", serif; font-weight: 500;
+  font-size: clamp(16px, 1.5vw, 22px); letter-spacing: .2em;
+}
+.sg-private__title {
+  margin: 0; font-weight: 500; white-space: nowrap;
+  font-size: clamp(17px, 1.72vw, 24px); letter-spacing: .04em; line-height: 1.4;
+}
+.sg-private__lead {
+  margin: clamp(12px, 1.6vw, 22px) 0 0;
+  font-size: clamp(12px, 1.06vw, 16px); line-height: 1.9; letter-spacing: .04em;
+}
+
+/* 締め文：Figma準拠＝テキストは左揃え、ブロック(≈945px)を中央配置。
+   2行目(長文)が1行に収まる幅を確保 */
+.sg-rooms__foot {
+  width: min(990px, calc(100% - 32px));
+  margin-inline: auto;
+  text-align: left;
+  font-size: clamp(14px, 1.1vw, 16px);
+  line-height: 1.95; letter-spacing: .02em; color: var(--sg-ink);
+}

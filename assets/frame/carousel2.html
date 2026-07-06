@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>rooms carousel</title>
+<!-- 客室カルーセル（center zoom）自前実装。参照 black-flag CenterZoom の発想：
+     トラックを平行移動して対象スライドをビューポート中央に置き、そのスライドに .is-center を付けて
+     transform:scale で拡大＋transition 0.7s で滑らかにズーム。中央が必ず拡大される。iframe内=JS自由 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500&display=swap">
+<style>
+  :root{
+    --slide-w: 35vw;      /* サイド(基準)スライド幅 */
+    --gap: 1.6vw;         /* スライド左右マージン（合計3.2vw≒間隔） */
+    --zoom: 1.45;         /* 中央の拡大率（≒1.45倍） */
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; }
+  .czc { height: 100%; overflow: hidden; position: relative; }
+  .czc__track {
+    display: flex; align-items: center; height: 100%;
+    transition: transform .7s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+  .czc__slide {
+    flex: 0 0 var(--slide-w);
+    margin: 0 var(--gap);
+    aspect-ratio: 3 / 2;
+    position: relative;
+    transform: scale(1);
+    transform-origin: center center;
+    transition: transform .7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .czc__slide.is-center { transform: scale(var(--zoom)); z-index: 3; }
+  .czc__slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* ラベル：写真ごとに半透明パネル＋白文字 */
+  .czc__label {
+    position: absolute; right: 0; bottom: 0;
+    padding: clamp(5px, .7vw, 9px) clamp(10px, 1.2vw, 16px);
+    background: rgba(0, 0, 0, .22);
+    color: #ffffff;
+    font-family: "Shippori Mincho", serif; font-weight: 500;
+    font-size: clamp(11px, .95vw, 14px); letter-spacing: .1em; line-height: 1;
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+  <div class="czc"><div class="czc__track" id="track"></div></div>
+
+  <script>
+    (function () {
+      var rooms = [
+        { img: '../img/room-tei-hana.jpg',        label: '本館 汀・華',   alt: '本館 汀・華 客室' },
+        { img: '../img/room-kihinshitsu-yama.jpg', label: '貴賓室 山',     alt: '貴賓室 山 客室' },
+        { img: '../img/room-sokai.jpg',           label: '特別室 蒼・海', alt: '特別室 蒼・海 客室' },
+        { img: '../img/room-tomoshibi.jpg',       label: '特別室 燈',     alt: '特別室 燈 客室' }
+      ];
+      var N = rooms.length, COPIES = 3;           // 前後にコピーを置き無限ループ風に
+      var track = document.getElementById('track');
+      var html = '';
+      for (var c = 0; c < COPIES; c++) {
+        for (var i = 0; i < N; i++) {
+          var r = rooms[i];
+          html += '<div class="czc__slide"><img src="' + r.img + '" alt="' + r.alt + '">' +
+                  '<span class="czc__label">' + r.label + '</span></div>';
+        }
+      }
+      track.innerHTML = html;
+      var slides = track.children;
+      var idx = N;                                // 真ん中のコピーの先頭から開始
+
+      function center(animate) {
+        var el = slides[idx];
+        var elCenter = el.offsetLeft + el.offsetWidth / 2;   // レイアウト位置（scale無視）で中央合わせ
+        var tx = track.parentElement.clientWidth / 2 - elCenter;
+        if (!animate) { track.style.transition = 'none'; }
+        track.style.transform = 'translateX(' + tx + 'px)';
+        for (var k = 0; k < slides.length; k++) slides[k].classList.remove('is-center');
+        el.classList.add('is-center');
+        if (!animate) {
+          // reflow して transition を戻す
+          void track.offsetWidth;
+          track.style.transition = '';
+        }
+      }
+
+      function next() {
+        idx++;
+        center(true);
+        // 末尾コピーに入ったら、アニメ後に中央コピーへ無音ジャンプ
+        if (idx >= N * 2) {
+          setTimeout(function () { idx -= N; center(false); }, 720);
+        }
+      }
+
+      // 初期化（画像読み込み後にレイアウト確定してから中央寄せ）
+      function init() { center(false); }
+      window.addEventListener('load', init);
+      window.addEventListener('resize', function () { center(false); });
+      init();
+      setInterval(next, 3400);
+    })();
+  </script>
+</body>
+</html>

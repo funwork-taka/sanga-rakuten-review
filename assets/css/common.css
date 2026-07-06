@@ -1,0 +1,180 @@
+@charset "utf-8";
+/* =============================================================
+   雅の宿 山龢 (さんが / the b) — 楽天トラベル カスタマイズページ
+   common.css : 全ページ共通（器の全幅化・背景・ナビ・ボタン・共通部品）
+   - class/id は衝突回避のため sg- プレフィックス統一
+   - JS不使用（楽天GOLD制約）。動きが要る要素は別途 iframe 化
+   - 画像/CSSの url() は本CSSからの相対 → サーバー移設時もそのまま解決
+   ============================================================= */
+
+/* ---- Google Fonts（明朝：Shippori Mincho ＋ 一部見出しの Noto Serif JP）---- */
+@import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;500;600&display=swap');
+
+/* ---- 楽天テンプレGOLDの器を全幅化（本番のみ効く。プレビューでは無害）----
+   デフォの #htlMainContent{width:950px} 等を上書きして器ごと広げる。
+   参照: reference_rakuten_fullbleed_technique（2000px方式ではなく calc全幅方式を採用） */
+#htlMainContent,
+#htlContents,
+#htlContents.single-column {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+
+/* ---- 変数（デザイントークン）---- */
+.sg {
+  --sg-ink:        #333333;   /* 基本文字色 */
+  --sg-ink-soft:   #555555;
+  --sg-line:       rgba(0,0,0,.14);
+  --sg-btn-bg:     #333333;   /* 濃色ボタン */
+  --sg-btn-fg:     #ffffff;
+  --sg-content:    1200px;    /* ナビ等コンテンツ幅 */
+  --sg-read:       1190px;    /* 本文読み幅 */
+  --sg-nav-h:      103px;
+  --sg-font:       "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+}
+
+/* ---- ルートラッパー ---- */
+.sg {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  overflow-x: clip;                   /* 100vw時の横スクロール防止。hiddenだとスクロールコンテナ化してposition:stickyが効かなくなるためclip（縦はvisible維持） */
+  color: var(--sg-ink);
+  font-family: var(--sg-font);
+  /* Shippori Mincho の Regular(400) は細く可読性が落ちるため、既定を Medium(500) にする。
+     全ページ共通ルール（Boldは700のまま、個別に500指定済みの箇所はそのまま） */
+  font-weight: 500;
+  line-height: 1.9;
+  letter-spacing: .04em;
+  text-align: left;
+  /* ページ背景：白＋和紙テクスチャ（50%は画像に焼き込み済み）。
+     横は全幅で1枚（背景幅100%）＝横方向の継ぎ目をなくし、縦方向のみタイル(repeat-y) */
+  background-color: #ffffff;
+  background-image: url('../img/bg-washi.jpg');
+  background-repeat: repeat-y;
+  background-size: 100% auto;
+  background-position: top center;
+}
+.sg *,
+.sg *::before,
+.sg *::after { box-sizing: border-box; }
+
+.sg img,
+.sg svg,
+.sg video { display: block; max-width: 100%; }
+
+.sg a { color: inherit; text-decoration: none; }
+
+/* ---- フルブリード補助：950px枠内でも 100vw に広げる ---- */
+.sg-bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+/* ---- 内側の読み幅コンテナ ---- */
+.sg-inner {
+  width: 100%;
+  max-width: var(--sg-content);
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4vw, 40px);
+}
+
+/* =============================================================
+   グローバルナビ（全ページ共通・ヒーロー直下の帯）
+   デザイン: 全幅の帯 rgba(0,0,0,.10) / 内側1200px / 明朝16px
+   ============================================================= */
+.sg-nav {
+  background: rgba(0,0,0,.10);            /* 白+和紙の上に10%黒 = 温かい薄グレー */
+}
+.sg-nav__inner {
+  max-width: var(--sg-content);
+  margin-inline: auto;
+  min-height: var(--sg-nav-h);
+  padding-inline: clamp(16px, 3vw, 32px);
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 3vw, 48px);
+}
+.sg-nav__logo {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+.sg-nav__logo img { width: 77px; height: auto; }
+
+.sg-nav__menu {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 3.2vw, 44px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sg-nav__menu a {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--sg-ink);
+  letter-spacing: .12em;
+  padding: 6px 2px;
+  position: relative;
+  transition: opacity .25s ease;
+}
+.sg-nav__menu a:hover { opacity: .6; }
+.sg-nav__menu a[aria-current="page"] { font-weight: 700; }  /* current は太字 */
+
+/* =============================================================
+   セクション共通見出しパーツ（【】縦ラベル / 濃色ENピル / 見出し / 説明文）
+   §6客室・§7食事・各下層ページで再利用
+   ============================================================= */
+.sg-sectag { text-align: center; }
+.sg-sectag span {
+  writing-mode: vertical-rl;
+  font-family: "Noto Serif JP", serif; font-weight: 500;
+  font-size: clamp(18px, 1.5vw, 22px); letter-spacing: .18em;
+  color: var(--sg-ink);
+}
+.sg-titlerow {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+}
+.sg-sec-title {
+  margin: 0; font-weight: 500;
+  font-size: clamp(19px, 1.55vw, 22px); letter-spacing: .1em;
+}
+.sg .sg-en {
+  flex: 0 0 auto;
+  display: inline-flex; align-items: center; gap: 14px;
+  background: var(--sg-ink); color: #fff;
+  font-size: clamp(15px, 1.25vw, 18px); font-weight: 500;
+  letter-spacing: .18em; padding: 6px 18px;
+}
+.sg .sg-en::after { content: ""; width: 60px; height: 1px; background: #fff; }
+.sg-sec-lead {
+  margin: 0; font-size: clamp(14px, 1.1vw, 16px);
+  line-height: 1.95; letter-spacing: .03em; color: var(--sg-ink);
+}
+
+/* ---- 濃色ボタン（宿泊プラン一覧 等）----
+   セレクタは .sg .sg-btn とし、リセットの .sg a{color:inherit} より
+   詳細度を上げて白文字を確実に適用する */
+.sg .sg-btn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 148px;
+  min-height: 47px;
+  padding: 0 22px;
+  background: var(--sg-btn-bg);
+  color: var(--sg-btn-fg);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  transition: opacity .25s ease;
+}
+.sg .sg-btn:hover { opacity: .82; }

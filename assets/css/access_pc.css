@@ -1,0 +1,56 @@
+@charset "utf-8";
+/* =============================================================
+   アクセス / PC版 固有スタイル。common.css 再利用。
+   コンテンツは 952px 中央列（Figma 17.1%マージン）。ルートフロー図は[image]書き出し。
+   ============================================================= */
+
+.sg-access { max-width: 952px; margin-inline: auto; padding: clamp(48px, 6vw, 96px) clamp(16px, 4vw, 24px) 0; }
+
+/* ---- 見出し＋地図 ---- */
+.sg-access__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: clamp(24px, 3vw, 40px); flex-wrap: wrap; }
+.sg-access__title .sg-en { display: inline-block; background: none; color: #8c8c8c; padding: 0; letter-spacing: .18em; font-size: clamp(13px, 1.1vw, 16px); }
+.sg-access__h1 { margin: clamp(8px, 1vw, 14px) 0 0; font-family: "Noto Serif JP", serif; font-weight: 500; font-size: clamp(28px, 2.9vw, 40px); letter-spacing: .1em; }
+.sg-access__maplink { display: inline-flex; align-items: center; font-size: clamp(13px, 1.24vw, 18px); letter-spacing: .04em; color: var(--sg-ink); transition: opacity .2s; }
+.sg-access__maplink:hover { opacity: .6; }
+.sg-access__pin { display: inline-block; width: 13px; height: 17px; margin-right: 7px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23333' d='M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z'/%3E%3C/svg%3E") no-repeat center / contain; }
+.sg-access__map { width: 100%; aspect-ratio: 952 / 597; position: relative; }
+.sg-access__map iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; filter: grayscale(1) contrast(.95) brightness(1.03); }
+
+/* ---- 案内表（ラベル312／本文632・2分割罫線：ラベル#222／本文#222の16%） ---- */
+.sg-access__info { margin: clamp(40px, 5vw, 72px) 0 0; }
+.sg-access__info > div { display: flex; gap: 8px; }
+.sg-access__info dt, .sg-access__info dd { padding-block: clamp(18px, 2.2vw, 30px); font-size: clamp(14px, 1.24vw, 18px); color: var(--sg-ink); }
+.sg-access__info dt { flex: 0 0 32.8%; letter-spacing: .04em; border-top: 1px solid #222222; }
+.sg-access__info dd { flex: 1 1 auto; margin: 0; line-height: 1.95; letter-spacing: .02em; border-top: 1px solid rgba(34,34,34,.16); }
+.sg-access__info > div:last-child dt { border-bottom: 1px solid #222222; }
+.sg-access__info > div:last-child dd { border-bottom: 1px solid rgba(34,34,34,.16); }
+.sg-access__info .lead { display: block; margin-top: clamp(12px, 1.4vw, 20px); }
+.sg-access__info .note { display: block; margin-top: 6px; color: #9a9a9a; font-size: .86em; line-height: 1.8; }
+
+/* ---- 交通セクション（お車／電車） ---- */
+.sg-access__sec { margin-top: clamp(56px, 7vw, 112px); }
+.sg-access__sechead { margin-bottom: clamp(28px, 3.5vw, 52px); }
+.sg-access__sechead .sg-en { display: inline-block; background: none; color: #8c8c8c; padding: 0; letter-spacing: .18em; font-size: clamp(13px, 1.1vw, 16px); }
+.sg-access__h2 { margin: clamp(8px, 1vw, 14px) 0 0; font-family: "Noto Serif JP", serif; font-weight: 500; font-size: clamp(26px, 2.9vw, 40px); letter-spacing: .1em; }
+
+.sg-route { margin-top: clamp(36px, 4.5vw, 72px); }
+.sg-route:first-of-type { margin-top: 0; }
+.sg-route__head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding-bottom: clamp(14px, 1.8vw, 24px); border-bottom: 1px solid rgba(34,34,34,.16); margin-bottom: clamp(20px, 2.4vw, 34px); }
+.sg-route__head h3 { margin: 0; font-family: "Noto Serif JP", serif; font-weight: 500; font-size: clamp(18px, 2vw, 28px); letter-spacing: .06em; }
+.sg-route__dur { flex: 0 0 auto; font-size: clamp(12px, 1.1vw, 16px); letter-spacing: .04em; color: #777; }
+.sg-route__flow { width: 100%; height: auto; display: block; }
+
+/* =============================================================
+   共通フッター部品（PC）：home_pc.css と同一。自己完結のため内包
+   ============================================================= */
+.sg-search { width: min(1114px, 92vw); margin: clamp(48px, 6vw, 96px) auto clamp(40px, 5vw, 80px); aspect-ratio: 1114 / 566; position: relative; }
+.sg-search iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+.sg-footerband { position: relative; width: 100vw; margin-left: calc(50% - 50vw); background: #2e2e2e; overflow: hidden; min-height: clamp(470px, 48.3vw, 730px);
+  display: flex; align-items: center; justify-content: center; padding: clamp(48px, 6vw, 96px) 20px clamp(56px, 7vw, 118px); text-align: center; color: #fff; }
+.sg-footerband__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.sg-footerband::after { content: ""; position: absolute; inset: 0; z-index: 1; background: rgba(28, 28, 28, .5); }
+.sg-footerband__inner { position: relative; z-index: 2; }
+.sg-footerband__logo { width: clamp(118px, 11.4vw, 172px); height: auto; margin: 0 auto; }
+.sg-footerband__addr { margin: clamp(28px, 3.6vw, 56px) 0 0; font-size: clamp(13px, 1.06vw, 16px); font-weight: 500; line-height: 2.1; letter-spacing: .08em; }
+.sg-footerband__copy { position: absolute; left: 0; right: 0; bottom: clamp(18px, 2.6vw, 38px); z-index: 2; margin: 0; font-size: clamp(10px, .73vw, 11px); letter-spacing: .06em; opacity: .92; }

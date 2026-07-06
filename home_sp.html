@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<title>home_sp(SP)｜雅の宿 山龢（レビュー用・非公開）</title>
+<style>
+  html,body{margin:0;padding:0;background:#fff;}
+  #htlMainContent{width:100%;margin:0;background:#fff;}
+</style>
+</head>
+<body>
+<div id="htlContents" class="single-column"><div id="htlMainContent">
+<!-- ============================================================
+     雅の宿 山龢（さんが / the b）楽天トラベル カスタマイズページ
+     HOME / SP版（スマホ）― 楽天テンプレGOLD の SP用カスタマイズHTML
+     （<html><head><body> は書かない：楽天ページ側に既存）
+     ▼移設トークン: .（アセット基点） / #（宿泊プラン一覧）
+     ============================================================ -->
+
+<link rel="stylesheet" href="./assets/css/common.css">
+<link rel="stylesheet" href="./assets/css/home_sp.css">
+
+<div class="sg" id="sg-top">
+
+  <!-- ============ §1 ヒーロー(MV) ============ -->
+  <section class="sg-hero" aria-label="雅の宿 山龢">
+    <video class="sg-hero__video" autoplay muted loop playsinline
+           poster="./assets/img/hero-poster.jpg">
+      <!-- <source src="./assets/video/hero.mp4" type="video/mp4"> -->
+    </video>
+    <img class="sg-hero__logo" src="./assets/img/hero-logo.png" alt="雅の宿 山龢">
+  </section>
+
+  <!-- ============ §2 グローバルナビ ============ -->
+  <nav class="sg-spnav sg-bleed" aria-label="サイト内ナビゲーション">
+    <div class="sg-spnav__grid">
+      <a href="#sg-top" aria-current="page">HOME</a>
+      <a href="rooms_sp.html">客室</a>
+      <a href="dining_sp.html">食事</a>
+      <a href="access_sp.html">アクセス</a>
+    </div>
+    <a class="sg-spnav__btn" href="#">宿泊プラン一覧</a>
+  </nav>
+
+  <!-- ============ §3 コンセプト帯 ============ -->
+  <section class="sg-concept" aria-label="コンセプト">
+    <div class="sg-concept__img">
+      <img src="./assets/img/concept-01.jpg" alt="窓辺に海景色を望む、雅の宿 山龢の客室リビング" loading="lazy">
+    </div>
+    <div class="sg-concept__lead">
+      <span class="sg-concept__mark">
+        <img src="./assets/img/sanga-name.png" alt="山龢">
+        <span class="sg-concept__ruby" aria-hidden="true">さんが</span>
+      </span>
+      <p class="sg-concept__text">
+        山と海、人と自然、日常と非日常<br>
+        相反するものが調和し、<br>
+        究極に充実した状態を意味するオリジナルの名。
+      </p>
+    </div>
+    <div class="sg-concept__img">
+      <img src="./assets/img/concept-02.jpg" alt="大きな窓から海に浮かぶ島を望む客室からの眺望" loading="lazy">
+    </div>
+  </section>
+
+  <!-- ============ §4 眺望シーン（相模湾） ============ -->
+  <section class="sg-scene" aria-label="眼前に広がる相模湾">
+    <div class="sg-scene__media" style="background:#dfe3e4 url('./assets/img/scene-01.jpg') center/cover no-repeat;">
+      <video autoplay muted loop playsinline poster="./assets/img/scene-01.jpg">
+        <source src="./assets/video/scene.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="sg-scene__body">
+      <h2 class="sg-scene__title">時間を、ただ味わう場所</h2>
+      <p class="sg-scene__lead">眼前に広がる相模湾</p>
+      <p class="sg-scene__note">扉を開いた瞬間、熱海の自然が迎えに来る。</p>
+    </div>
+  </section>
+
+  <!-- ============ §5 ギャラリー ============ -->
+  <section class="sg-gallery" aria-label="移ろう景色">
+    <div class="sg-gallery__carousel">
+      <iframe src="./assets/frame/carousel1.html" title="移ろう景色のスライドショー" loading="lazy" scrolling="no"></iframe>
+    </div>
+    <div class="sg-gallery__cap">
+      <div class="sg-vwrap">
+        <span class="sub">朝の露、黄金の夕暮れ、夜の漆黒 ―――</span>
+        <span class="sub">同じ景色は二度とない。</span>
+        <span class="head">刻々と変わる</span>
+        <span class="head">光と色</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Frame24：§5→§6の間のゴースト映像バンド（動画20%＋左右下の白フェード。無音→autoplay muted loop） ====== -->
+  <section class="sg-roomvid" aria-hidden="true">
+    <video class="sg-roomvid__video" autoplay muted loop playsinline
+           poster="./assets/img/rooms-teaser-poster.jpg">
+      <source src="./assets/video/rooms-teaser.mp4" type="video/mp4">
+    </video>
+  </section>
+
+  <!-- ============ §6 客室 ============ -->
+  <section class="sg-rooms" aria-labelledby="sp-rooms-title">
+    <div class="sg-rooms__head">
+      <p class="sg-sectag"><span>【客室】</span></p>
+      <h2 class="sg-rooms__title" id="sp-rooms-title">海だけが、ここにいた</h2>
+      <p class="sg-rooms__intro">山龢には、貴賓館・本館あわせて7つの個性豊かな客室があります。上質で雅やかな空間に、露天風呂も全客室内にご用意しています。モダンでハイクラスなインテリアと情緒豊かな自然の景色をお愉しみください。</p>
+      <div class="sg-rooms__en-wrap"><span class="sg-en">ROOMs</span></div>
+    </div>
+    <div class="sg-rooms__carousel">
+      <iframe src="./assets/frame/sp-rooms.html" title="客室のスライドショー" loading="lazy" scrolling="no"></iframe>
+    </div>
+    <p class="sg-rooms__foot">山龢は本館・貴賓館の2棟からなります。貴賓館は各フロアに1室のみ。本館は各フロアに2室を備えておりますが、いずれもフロアを独占してお過ごしいただける設えです。</p>
+  </section>
+
+  <!-- ============ §7 食事 ============ -->
+  <section class="sg-food" aria-labelledby="sp-food-title">
+    <p class="sg-sectag"><span>【食事】</span></p>
+    <div class="sg-food__carousel">
+      <iframe src="./assets/frame/carousel3.html" title="お料理のスライドショー" loading="lazy" scrolling="no"></iframe>
+    </div>
+    <div class="sg-food__text">
+      <h2 class="sg-sec-title" id="sp-food-title">旬の恵みを相模湾とともに</h2>
+      <p class="sg-sec-lead">熱海の豊かな海と山がはぐくむ食材を一皿一皿に込めて。刻々と変わる景色とともに、食の表情も変わる。</p>
+      <div class="sg-en-wrap"><span class="sg-en">FOOD</span></div>
+    </div>
+  </section>
+
+  <!-- ============ §8 全館貸切 ============ -->
+  <section class="sg-private" aria-label="全館貸切">
+    <div class="sg-private__body">
+      <p class="sg-sectag"><span>【全館貸切】</span></p>
+      <h2 class="sg-private__title">山龢を、あなただけのために。</h2>
+      <p class="sg-private__lead">全7室の宿だからできる密室空間。<br>極秘の会談、極秘の会議、極秘の接待等にぜひ。</p>
+    </div>
+    <div class="sg-private__img">
+      <img src="./assets/img/private-bg.jpg" alt="海を望む山龢の客室。全館貸切で過ごす特別な空間" loading="lazy">
+    </div>
+  </section>
+
+  <!-- ============ §9 過ごし方（SP：iframe） ============ -->
+  <section class="sg-spend" aria-label="雅の宿 山龢の過ごし方">
+    <div class="sg-spend__frame">
+      <iframe src="./assets/frame/spend-sp.html" title="雅の宿 山龢の過ごし方" loading="lazy" scrolling="no"></iframe>
+    </div>
+  </section>
+
+  <!-- ============ §10 アクセス ============ -->
+  <section class="sg-access" aria-label="アクセス">
+    <div class="sg-access__side">
+      <p class="sg-access__tag">【アクセス】</p>
+      <div class="sg-access__vtext">
+        <span>相模湾を望む、静かな岬の上に。</span>
+        <span>静岡県熱海市網代。</span>
+      </div>
+    </div>
+    <div class="sg-access__map">
+      <iframe src="https://maps.google.com/maps?q=%E9%9D%99%E5%B2%A1%E7%9C%8C%E7%86%B1%E6%B5%B7%E5%B8%82%E7%B6%B2%E4%BB%A3591-102&z=15&output=embed"
+              title="雅の宿 山龢 周辺地図（静岡県熱海市網代591-102）" loading="lazy"></iframe>
+    </div>
+    <div class="sg-access__info">
+      <div class="sg-access__routes">
+        <p>東京から<br>車で約2時間 ／ 電車（踊り子号）＋伊東線で約2時間</p>
+        <p>名古屋から<br>車で約3時間</p>
+      </div>
+      <div class="sg-access__en-wrap"><a class="sg-en" href="access_sp.html">ACCESS</a></div>
+    </div>
+  </section>
+
+  <!-- ============ §11 フッター（[search] ＋ [背景全幅]） ============ -->
+  <div class="sg-search">
+    <iframe src="./assets/frame/search.html" title="空室検索カレンダー" scrolling="no"></iframe>
+  </div>
+
+  <footer class="sg-footerband">
+    <img class="sg-footerband__bg" src="./assets/img/footer-bg.jpg" alt="" aria-hidden="true" loading="lazy">
+    <div class="sg-footerband__inner">
+      <img class="sg-footerband__logo" src="./assets/img/footer-logo-wh.svg" alt="雅の宿 山龢">
+      <p class="sg-footerband__addr">
+        〒413-0103 静岡県熱海市網代591−102<br>
+        TEL 0557-68-3310<br>
+        チェックイン 15：30　チェックアウト 11：00
+      </p>
+    </div>
+    <p class="sg-footerband__copy">Copyright © 雅の宿 山龢 All rights reserved.</p>
+  </footer>
+  <!-- [rakuten-default] 楽天標準チャームは楽天が自動出力＝実装対象外 -->
+
+</div><!-- /.sg -->
+
+</div></div>
+</body>
+</html>

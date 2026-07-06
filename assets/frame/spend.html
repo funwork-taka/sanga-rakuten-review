@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>過ごし方</title>
+<!-- 「過ごし方」タイムライン連動フェードカルーセル。左＝時系列タブ／右＝フェード切替スライド＋前後ボタン。
+     キャプション（見出し＋説明）はステージ固定オーバーレイにし、切替時にテキストだけ差し替え（slickのfade高さ問題を回避）。
+     iframe内=JS自由（楽天JS禁止の回避） -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: transparent; overflow: hidden;
+    font-family: "Shippori Mincho", serif; color: #333; }
+  .spend { position: relative; width: 100%; height: 100%; }
+
+  .spend__panel { position: absolute; left: 0; top: 0; width: 33.1%; height: 100%; background: #f9f4ef; z-index: 0; }
+
+  /* z-indexはステージ(2)より下(1)。連結線がカルーセル上に伸びても画像の裏に隠れ、
+     タブ〜カルーセル手前の隙間だけ線が見える（デザイン準拠）。ナビ文字は左側でカルーセルと重ならない */
+  .spend__nav { position: absolute; left: 0; top: 17.4%; width: 24%; z-index: 1;
+    padding-left: clamp(14px, 1.35vw, 20px); }
+  .spend__title { margin: 0 0 clamp(20px, 2.6vw, 40px); font-weight: 500;
+    font-size: clamp(18px, 1.95vw, 28px); line-height: 1.45; letter-spacing: .06em; }
+  .spend__time { font-size: clamp(12px, 1.06vw, 16px); font-weight: 500; letter-spacing: .08em; margin: 0; }
+  .spend__timeline { position: relative; margin: 6px 0; padding-left: 24px; }
+  .spend__timeline::before { content: ""; position: absolute; left: 8px; top: 4px; bottom: 4px; width: 1px; background: #333; }
+  .spend__tabs { list-style: none; margin: 0; padding: 0;
+    display: flex; flex-direction: column; align-items: flex-start; }  /* li幅=文字幅にして連結線を文字末尾から出す */
+  .spend__tab { position: relative; padding: clamp(6px, .9vw, 11px) 0;
+    font-size: clamp(13px, 1.18vw, 18px); letter-spacing: .06em; color: #333;
+    cursor: pointer; transition: font-weight .2s, opacity .2s; opacity: .82; }
+  .spend__tab:hover { opacity: 1; }
+  .spend__tab.is-active { font-weight: 700; opacity: 1; }
+  /* アクティブ指標：文字の「下」に、左の縦スパインを少し突き抜けて（-26px≒スパインより左へ）
+     文字下を通りカルーセル手前まで横線 */
+  .spend__tab.is-active::after { content: ""; position: absolute; left: -26px; bottom: 4px;
+    width: 46vw; height: 1px; background: #333; }
+
+  .spend__stage { position: absolute; left: 21.8%; top: 17.4%; width: 74.2%; height: 65.2%; z-index: 2; overflow: hidden; }
+  .spend__car, .spend__car .slick-list, .spend__car .slick-track,
+  .spend__car .slick-slide { height: 100%; }
+  .spend__car { position: absolute; inset: 0; }
+  .sl { height: 100%; }
+  .sl img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* 下部を暗くして白文字を読みやすく */
+  .spend__scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background: linear-gradient(to top, rgba(0,0,0,.6) 0%, rgba(0,0,0,.15) 30%, rgba(0,0,0,0) 55%); }
+  /* キャプション（ステージ固定オーバーレイ） */
+  .spend__cap { position: absolute; left: 5.3%; right: 6%; bottom: 8%; z-index: 3; color: #fff; }
+  .spend__cap h3 { margin: 0 0 clamp(8px, 1vw, 14px); font-weight: 500;
+    font-size: clamp(18px, 1.95vw, 28px); letter-spacing: .08em; }
+  .spend__cap p { margin: 0; font-size: clamp(12px, 1.18vw, 17px); line-height: 1.75; letter-spacing: .03em; }
+
+  .spend__btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+    width: clamp(40px, 4vw, 61px); height: clamp(40px, 4vw, 61px);
+    display: flex; align-items: center; justify-content: center;
+    background: none; border: 0; cursor: pointer; color: #fff; }
+  .spend__btn svg { width: 62%; height: 62%; }
+  .spend__btn--prev { left: 1.4%; }
+  .spend__btn--next { right: 1.4%; }
+  .spend__car:not(.slick-initialized) .sl { display: none; }
+  .spend__car:not(.slick-initialized) .sl:first-child { display: block; }
+</style>
+</head>
+<body>
+  <div class="spend">
+    <div class="spend__panel"></div>
+    <nav class="spend__nav">
+      <h2 class="spend__title">雅の宿 山龢の<br>過ごし方</h2>
+      <p class="spend__time">15：30</p>
+      <div class="spend__timeline"><ul class="spend__tabs" id="tabs"></ul></div>
+      <p class="spend__time">11：00</p>
+    </nav>
+
+    <div class="spend__stage">
+      <div class="spend__car" id="car"></div>
+      <div class="spend__scrim"></div>
+      <div class="spend__cap"><h3 id="capH"></h3><p id="capD"></p></div>
+      <button class="spend__btn spend__btn--prev" id="prev" aria-label="前へ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <button class="spend__btn spend__btn--next" id="next" aria-label="次へ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+  <script>
+    jQuery(function ($) {
+      var items = [
+        { tab: 'チェックイン',     h: 'チェックイン',     img: 'spend-1-checkin.jpg',
+          d: 'エントランスを一歩くぐれば、絵画の如く広がる大パノラマ。<br>展望ラウンジに腰かけ、絶景を堪能している間にチェックインが完了します。' },
+        { tab: 'お部屋でゆったり', h: 'お部屋でゆったり', img: 'spend-2-room.jpg',
+          d: '85平米以上のゆとりある間取り、熱海を一望する大きな窓。<br>広々としたバルコニーで絶景を眺めながらゆったりお過ごしください。' },
+        { tab: 'ご入浴',           h: 'ご入浴',           img: 'spend-3-bath.jpg',
+          d: '源泉かけ流しの客室露天風呂で熱海温泉を堪能。<br>絶景をひとり占めする、開放感に満ちあふれたバスタイムをどうぞ。' },
+        { tab: 'ご夕食',           h: 'ご夕食',           img: 'spend-4-dinner.jpg',
+          d: '熱海の旬をふんだんに用いた和懐石。<br>絶景を見渡す展望レストランで、山海の幸を心ゆくまでご堪能ください。' },
+        { tab: '就寝',             h: 'ご就寝',           img: 'spend-5-sleep.jpg',
+          d: 'シモンズの高級ベッドで極上の就寝タイム。<br>YouTube・Netflix完備のスマートTVで、映画鑑賞をしながら夢の世界へ。' },
+        { tab: '朝のご入浴',       h: '朝のご入浴',       img: 'spend-6-mbath.jpg',
+          d: '源泉かけ流しの展望大浴場。<br>広々とした浴槽で熱海を見渡す爽やかな湯浴みをご堪能ください。' },
+        { tab: 'ご朝食',           h: 'ご朝食',           img: 'spend-7-breakfast.jpg',
+          d: '熱海の幸を味わう和朝食。<br>地元産の干物やテーブルで仕上げる出来立て熱々の百山豆腐をぜひご賞味ください。' },
+        { tab: 'チェックアウト',   h: 'チェックアウト',   img: 'spend-8-checkout.jpg',
+          d: '展望ラウンジで出発前のひととき。<br>一日のスケジュールを立てながら、出発までごゆっくりお過ごしください。' }
+      ];
+      var tabsH = '', carH = '';
+      items.forEach(function (it, i) {
+        tabsH += '<li class="spend__tab" data-i="' + i + '">' + it.tab + '</li>';
+        carH += '<div class="sl"><img src="../img/' + it.img + '" alt="' + it.h + '"></div>';
+      });
+      $('#tabs').html(tabsH);
+      $('#car').html(carH);
+
+      function setCap(i) {
+        $('#capH').html(items[i].h);
+        $('#capD').html(items[i].d);
+        $('.spend__tab').removeClass('is-active').eq(i).addClass('is-active');
+      }
+      setCap(0);
+
+      var $car = $('#car');
+      $car.on('beforeChange', function (e, slick, cur, next) { setCap(next); });
+      $car.slick({
+        fade: true, speed: 800, cssEase: 'ease-in-out',
+        autoplay: true, autoplaySpeed: 5000,
+        arrows: false, dots: false, draggable: false, pauseOnHover: false, accessibility: false
+      });
+      $('.spend__tab').on('click', function () { $car.slick('slickGoTo', +$(this).data('i')); });
+      $('#prev').on('click', function () { $car.slick('slickPrev'); });
+      $('#next').on('click', function () { $car.slick('slickNext'); });
+    });
+  </script>
+</body>
+</html>

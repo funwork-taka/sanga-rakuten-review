@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>過ごし方（SP）</title>
+<!-- SP「過ごし方」：横タイムライン（時系列タブ）＋全幅フェードカルーセル＋下にキャプション(#333)。
+     タブ/前後ボタンでスライド切替、アクティブタブ同期。iframe内=JS自由 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Serif+JP:wght@500&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; font-family: "Shippori Mincho", serif; color: #333; }
+  .sp { padding: 0 0 6px; }
+  .sp__title { text-align: center; margin: 0 0 clamp(20px, 6vw, 32px); font-family: "Noto Serif JP", serif;
+    font-weight: 500; font-size: clamp(18px, 5.4vw, 22px); letter-spacing: .06em; }
+
+  /* 横タイムライン */
+  .tl { position: relative; padding: 0 clamp(12px, 4vw, 20px); }
+  .tl__ends { display: flex; justify-content: space-between; font-size: clamp(12px, 3.4vw, 14px); font-weight: 500; }
+  .tl__line { height: 1px; background: #333; margin: 5px 0 0; }
+  .tl__tabs { display: flex; justify-content: space-between; align-items: flex-start;
+    list-style: none; margin: 0; padding: 10px 0 0; }
+  .tl__tab { position: relative; writing-mode: vertical-rl; cursor: pointer;
+    font-size: clamp(11px, 3.1vw, 13px); letter-spacing: .04em; color: #333;
+    padding: 8px 4px 10px; transition: opacity .2s; }
+  .tl__tab.is-active { font-weight: 700; background: #fff; }
+  .tl__tab.is-active::before { content: ""; position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+    width: 9px; height: 9px; border-radius: 50%; background: #333; }
+
+  /* カルーセル */
+  .sp__stage { position: relative; width: 100%; margin-top: clamp(24px, 7vw, 40px); }
+  .sp__car, .sp__car .slick-list, .sp__car .slick-track, .sp__car .slick-slide { height: 100%; }
+  .sp__frame { position: relative; width: 100%; aspect-ratio: 375 / 250; overflow: hidden; }
+  .sl { height: 100%; }
+  .sl img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .sp__btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+    width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+    background: none; border: 0; cursor: pointer; color: #fff; }
+  .sp__btn svg { width: 60%; height: 60%; filter: drop-shadow(0 1px 3px rgba(0,0,0,.5)); }
+  .sp__btn--prev { left: 2%; } .sp__btn--next { right: 2%; }
+
+  /* キャプション（画像下・#333） */
+  .sp__cap { padding: clamp(20px, 6vw, 30px) clamp(16px, 5vw, 22px) 0; }
+  .sp__cap h3 { margin: 0 0 clamp(10px, 3vw, 14px); font-weight: 500; font-size: clamp(17px, 5vw, 20px); letter-spacing: .06em; }
+  .sp__cap p { margin: 0; font-size: clamp(13px, 3.9vw, 15px); line-height: 1.95; letter-spacing: .02em; }
+  .sp__car:not(.slick-initialized) .sl { display: none; }
+  .sp__car:not(.slick-initialized) .sl:first-child { display: block; }
+</style>
+</head>
+<body>
+  <div class="sp">
+    <h2 class="sp__title">雅の宿 山龢の過ごし方</h2>
+    <div class="tl">
+      <div class="tl__ends"><span>15：30</span><span>11：00</span></div>
+      <div class="tl__line"></div>
+      <ul class="tl__tabs" id="tabs"></ul>
+    </div>
+    <div class="sp__stage">
+      <div class="sp__frame"><div class="sp__car" id="car"></div></div>
+      <button class="sp__btn sp__btn--prev" id="prev" aria-label="前へ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="sp__btn sp__btn--next" id="next" aria-label="次へ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+    <div class="sp__cap"><h3 id="capH"></h3><p id="capD"></p></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+  <script>
+    jQuery(function ($) {
+      var items = [
+        { tab: 'チェックイン', h: 'チェックイン', img: 'spend-1-checkin.jpg', d: 'エントランスを一歩くぐれば、絵画の如く広がる大パノラマ。<br>展望ラウンジに腰かけ、絶景を堪能している間にチェックインが完了します。' },
+        { tab: 'お部屋でゆったり', h: 'お部屋でゆったり', img: 'spend-2-room.jpg', d: '85平米以上のゆとりある間取り、熱海を一望する大きな窓。<br>広々としたバルコニーで絶景を眺めながらゆったりお過ごしください。' },
+        { tab: 'ご入浴', h: 'ご入浴', img: 'spend-3-bath.jpg', d: '源泉かけ流しの客室露天風呂で熱海温泉を堪能。<br>絶景をひとり占めする、開放感に満ちあふれたバスタイムをどうぞ。' },
+        { tab: 'ご夕食', h: 'ご夕食', img: 'spend-4-dinner.jpg', d: '熱海の旬をふんだんに用いた和懐石。<br>絶景を見渡す展望レストランで、山海の幸を心ゆくまでご堪能ください。' },
+        { tab: '就寝', h: 'ご就寝', img: 'spend-5-sleep.jpg', d: 'シモンズの高級ベッドで極上の就寝タイム。<br>YouTube・Netflix完備のスマートTVで、映画鑑賞をしながら夢の世界へ。' },
+        { tab: '朝のご入浴', h: '朝のご入浴', img: 'spend-6-mbath.jpg', d: '源泉かけ流しの展望大浴場。<br>広々とした浴槽で熱海を見渡す爽やかな湯浴みをご堪能ください。' },
+        { tab: 'ご朝食', h: 'ご朝食', img: 'spend-7-breakfast.jpg', d: '熱海の幸を味わう和朝食。<br>地元産の干物やテーブルで仕上げる出来立て熱々の百山豆腐をぜひご賞味ください。' },
+        { tab: 'チェックアウト', h: 'チェックアウト', img: 'spend-8-checkout.jpg', d: '展望ラウンジで出発前のひととき。<br>一日のスケジュールを立てながら、出発までごゆっくりお過ごしください。' }
+      ];
+      var tabsH = '', carH = '';
+      items.forEach(function (it, i) {
+        tabsH += '<li class="tl__tab" data-i="' + i + '">' + it.tab + '</li>';
+        carH += '<div class="sl"><img src="../img/' + it.img + '" alt="' + it.h + '"></div>';
+      });
+      $('#tabs').html(tabsH); $('#car').html(carH);
+      function setCap(i) {
+        $('#capH').html(items[i].h); $('#capD').html(items[i].d);
+        $('.tl__tab').removeClass('is-active').eq(i).addClass('is-active');
+      }
+      setCap(0);
+      var $car = $('#car');
+      $car.on('beforeChange', function (e, s, cur, next) { setCap(next); });
+      $car.slick({ fade: true, speed: 700, cssEase: 'ease-in-out', autoplay: true, autoplaySpeed: 5000,
+        arrows: false, dots: false, draggable: true, pauseOnHover: false, accessibility: false });
+      $('.tl__tab').on('click', function () { $car.slick('slickGoTo', +$(this).data('i')); });
+      $('#prev').on('click', function () { $car.slick('slickPrev'); });
+      $('#next').on('click', function () { $car.slick('slickNext'); });
+    });
+  </script>
+</body>
+</html>

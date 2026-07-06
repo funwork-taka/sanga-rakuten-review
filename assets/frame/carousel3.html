@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>food carousel</title>
+<!-- 食事カルーセル（等倍・横スライド／ズームなし）。中央スライド＋左右にpeek。iframe内=JS自由 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+<style>
+  html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; }
+  .car3, .car3 .slick-list, .car3 .slick-track, .car3 .slick-slide { height: 100%; }
+  .fs { height: 100%; padding: 0 10px; box-sizing: border-box; }   /* 左右10px=スライド間20pxギャップ */
+  .fs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .car3:not(.slick-initialized) > div { display: none; }
+  .car3:not(.slick-initialized) > div:first-child { display: block; }
+</style>
+</head>
+<body>
+  <div class="car3">
+    <div class="fs"><img src="../img/food-1.jpg" alt="相模湾の旬の魚介（金目鯛・伊勢海老・鮑など）"></div>
+    <div class="fs"><img src="../img/food-2.jpg" alt="旬魚のお造り盛り合わせ"></div>
+    <div class="fs"><img src="../img/food-3.jpg" alt="相模湾の幸を味わう会席料理の膳"></div>
+    <div class="fs"><img src="../img/food-4.jpg" alt="季節の八寸と天ぷらの盛り合わせ"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+  <script>
+    jQuery(function ($) {
+      $('.car3').slick({
+        centerMode: true,
+        slidesToShow: 1,
+        centerPadding: '16.3%',      // 中央スライド≒67vw＋左右peek
+        autoplay: true,
+        autoplaySpeed: 3800,
+        speed: 800,
+        cssEase: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        arrows: false,
+        dots: false,
+        pauseOnHover: false,
+        draggable: true,
+        accessibility: false,
+        responsive: [{ breakpoint: 600, settings: { centerPadding: '0px' } }]  /* SPは全幅(peekなし) */
+      });
+    });
+  </script>
+</body>
+</html>
