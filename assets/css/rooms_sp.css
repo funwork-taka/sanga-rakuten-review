@@ -13,7 +13,8 @@
 .sg-phero__tag span { writing-mode: vertical-rl; font-family: "Noto Serif JP", serif; font-weight: 500; font-size: clamp(14px, 4vw, 15px); letter-spacing: .22em; }
 .sg-phero__title { display: flex; flex-direction: row-reverse; justify-content: center; align-items: flex-start; gap: clamp(4px, 1.4vw, 8px); margin: 0; font-weight: 500; text-shadow: 0 2px 16px rgba(0,0,0,.35); }
 .sg-phero__title span { writing-mode: vertical-rl; font-size: clamp(28px, 9vw, 36px); letter-spacing: .16em; line-height: 1.08; }
-.sg-phero__en { margin: 0; font-family: "Noto Serif JP", serif; font-style: italic; font-size: clamp(12px, 3.9vw, 15px); letter-spacing: .12em; line-height: 1.7; opacity: .92; }
+/* 英字サブ：Figma=EB Garamond15/行間120%/字間4%・#E6E6E6・不透明度50%・タイトル左下へ左揃え配置（PCと同方針） */
+.sg-phero__en { margin: 0; font-family: "EB Garamond", "Noto Serif JP", serif; font-style: italic; font-weight: 500; font-size: clamp(13px, 4vw, 15px); letter-spacing: .04em; line-height: 1.2; text-align: left; white-space: nowrap; color: #e6e6e6; opacity: .5; transform: translate(-50%, -76px); }
 
 /* ---- グローバルナビ（2×2＋プラン。home_sp と同一・自己完結） ---- */
 .sg-spnav { display: flex; align-items: stretch; background: rgba(0,0,0,.10); }
