@@ -351,7 +351,7 @@
 .sg-access__info {
   display: flex; justify-content: space-between; align-items: flex-end; gap: 24px;
   margin-top: clamp(22px, 2.8vw, 42px);
-  padding-left: clamp(16px, 3.4vw, 48px);
+  padding-left: 19.9%;   /* Figma: テキスト左位置=地図幅の19.9%(189/949)。地図(main)幅に連動し画面幅で可変 */
 }
 .sg-access__routes p {
   margin: 0; font-size: clamp(13px, 1.06vw, 16px);
