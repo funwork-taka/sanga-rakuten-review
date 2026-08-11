@@ -242,14 +242,14 @@
   font-size: clamp(19px, 1.55vw, 22px);
   letter-spacing: .1em;
 }
-.sg-rooms__en {
+.sg .sg-rooms__en {
   flex: 0 0 auto;
   display: inline-flex; align-items: center; gap: 14px;
   background: var(--sg-ink); color: #fff;
   font-size: clamp(15px, 1.25vw, 18px); font-weight: 500;
   letter-spacing: .18em; padding: 6px 18px;
 }
-.sg-rooms__en::after { content: ""; width: 60px; height: 1px; background: #fff; }
+.sg .sg-rooms__en::after { content: ""; width: 60px; height: 1px; background: #fff; }
 .sg-rooms__intro {
   margin: 0; font-size: clamp(14px, 1.1vw, 16px);
   line-height: 1.95; letter-spacing: .03em; color: var(--sg-ink);
@@ -401,8 +401,15 @@
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; display: block;
 }
+/* テキストを載せる左側だけを落として可読性を確保（背景の明暗に依存しないようにする）。
+   右へ向けて完全に透明へ抜くので、写真の見え方はほぼ変えない */
+.sg-private::before {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(90deg,
+              rgba(0,0,0,.58) 0%, rgba(0,0,0,.46) 22%, rgba(0,0,0,.20) 40%, rgba(0,0,0,0) 56%);
+}
 .sg-private__body {
-  position: absolute; top: 20%; right: 5.6%;
+  position: absolute; top: 20%; left: 5.6%;
   width: clamp(240px, 27.5vw, 396px);
   color: #ffffff; z-index: 2;
   text-align: center;                 /* ブロック内で中央揃え */
