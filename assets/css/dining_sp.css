@@ -6,11 +6,11 @@
 /* ---- ページヒーロー（縦長・画像上に縦書きタイトル＋左上ロゴ） ---- */
 .sg-phero { position: relative; width: 100vw; margin-left: calc(50% - 50vw); aspect-ratio: 384 / 682; min-height: 520px; overflow: hidden; display: flex; align-items: center; justify-content: center; text-align: center; }
 .sg-phero__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
-.sg-phero::after { content: ""; position: absolute; inset: 0; z-index: 1; background: rgba(22, 20, 17, .32); }
+.sg-phero::after { content: ""; position: absolute; inset: 0; z-index: 1; background: rgba(22, 20, 17, .48);   /* 明るい料理写真に白文字を載せるため強めに（撮り直しでヒーローが明転したため） */ }
 .sg-phero__logo { position: absolute; top: clamp(16px, 4.5vw, 24px); left: clamp(16px, 4.5vw, 24px); z-index: 3; width: clamp(40px, 12vw, 52px); height: auto; filter: drop-shadow(0 1px 6px rgba(0,0,0,.4)); }
 .sg-phero__inner { position: relative; z-index: 2; color: #fff; display: flex; flex-direction: column; align-items: center; gap: clamp(16px, 5vw, 28px); }
-.sg-phero__tag span { writing-mode: vertical-rl; font-family: "Noto Serif JP", serif; font-weight: 500; font-size: clamp(14px, 4vw, 15px); letter-spacing: .22em; }
-.sg-phero__title { display: flex; flex-direction: row-reverse; justify-content: center; align-items: flex-start; gap: clamp(4px, 1.4vw, 8px); margin: 0; font-weight: 500; text-shadow: 0 2px 16px rgba(0,0,0,.35); }
+.sg-phero__tag span { text-shadow: 0 2px 18px rgba(0,0,0,.8), 0 0 8px rgba(0,0,0,.55); writing-mode: vertical-rl; font-family: "Noto Serif JP", serif; font-weight: 500; font-size: clamp(14px, 4vw, 15px); letter-spacing: .22em; }
+.sg-phero__title { display: flex; flex-direction: row-reverse; justify-content: center; align-items: flex-start; gap: clamp(4px, 1.4vw, 8px); margin: 0; font-weight: 500; text-shadow: 0 2px 18px rgba(0,0,0,.8), 0 0 8px rgba(0,0,0,.55); }
 .sg-phero__title span { writing-mode: vertical-rl; font-size: clamp(28px, 9vw, 36px); letter-spacing: .16em; line-height: 1.08; }
 /* 英字サブ：Figma=EB Garamond15/行間120%/字間4%・#E6E6E6・不透明度50%・タイトル左下へ左揃え配置（PCと同方針） */
 .sg-phero__en { margin: 0; font-family: "EB Garamond", "Noto Serif JP", serif; font-style: italic; font-weight: 500; font-size: clamp(13px, 4vw, 15px); letter-spacing: .04em; line-height: 1.2; text-align: left; white-space: nowrap; color: #e6e6e6; opacity: .5; transform: translate(-50%, -36px); }
